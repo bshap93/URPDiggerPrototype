@@ -1,56 +1,110 @@
 using System;
-using System.Xml;
-using Domains.Items;
+using Domains.Input;
+using Gameplay.Events;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
-public class ManualItemPicker : MonoBehaviour
+namespace Domains.Items
 {
-    public string UniqueID;
-    public BaseItem Item;
-    public int Quantity = 1;
-    
-    [Header("Feedbacks")]
-    [Tooltip("Feedbacks to play when the item is picked up")]
-    public MMFeedbacks pickedMmFeedbacks; // Feedbacks to play when the item is picked up
-    [Tooltip("Feedbacks to play when the item is sold")]
-    public MMFeedbacks soldMmFeedbacks; // Feedbacks to play when the item is sold
-    public bool NotPickable; // If true, the item cannot be picked up
-    
-    bool _isInRange;
-    
-    Inventory _targetInventory;
-
-    void Awake()
+    public class ManualItemPicker : MonoBehaviour, IInteractable
     {
-        if (string.IsNullOrEmpty(UniqueID))
+        public string UniqueID;
+        public BaseItem Item;
+        public int Quantity = 1;
+    
+        [Header("Feedbacks")]
+        [Tooltip("Feedbacks to play when the item is picked up")]
+        public MMFeedbacks pickedMmFeedbacks; // Feedbacks to play when the item is picked up
+        [Tooltip("Feedbacks to play when the item is sold")]
+        public MMFeedbacks soldMmFeedbacks; // Feedbacks to play when the item is sold
+        public bool NotPickable; // If true, the item cannot be picked up
+    
+        bool _isInRange;
+        bool _isBeingDestroyed;
+        
+        
+        
+    
+        Inventory _targetInventory;
+
+        void Awake()
         {
-            UniqueID = Guid.NewGuid().ToString(); // Generate only if unset
-            Debug.LogWarning($"Generated new UniqueID for {gameObject.name}: {UniqueID}");
+            if (string.IsNullOrEmpty(UniqueID))
+            {
+                UniqueID = Guid.NewGuid().ToString(); // Generate only if unset
+                Debug.LogWarning($"Generated new UniqueID for {gameObject.name}: {UniqueID}");
+            }
         }
-    }
 
-    void Start()
-    {
-        if (PickableManager.IsItemPicked(UniqueID))
+        void Start()
         {
-            Destroy(gameObject);
-            return;
+            if (PickableManager.IsItemPicked(UniqueID))
+            {
+                Destroy(gameObject);
+                return;
             
-            // _promptManager = FindObjectOfType<PromptManager>();
+                // _promptManager = FindObjectOfType<PromptManager>();
+            }
+        
+            _targetInventory = FindFirstObjectByType<Inventory>();
+        
+            if (_targetInventory == null)
+            {
+                Debug.LogWarning("No inventory found in scene");
+            }
+        
+            if (pickedMmFeedbacks!=null)
+            {
+                pickedMmFeedbacks.Initialization(gameObject);
+            }
+        
+
         }
-        
-        _targetInventory = FindFirstObjectByType<Inventory>();
-        
-        if (_targetInventory == null)
+        void Update() 
         {
-            Debug.LogWarning("No inventory found in scene");
+            if (_isInRange && CustomInputBindings.IsInteractPressed())
+            {
+                PickItem();
+            }
         }
         
-        if (pickedMmFeedbacks!=null)
+        void OnDestroy()
         {
-            pickedMmFeedbacks.Initialization(gameObject);
+            _isBeingDestroyed = true;
+            
+            _isInRange = false;
+            enabled = false;
         }
         
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                _isInRange = true;
+                // _promptManager?.ShowPickupPrompt("Press F to pick up");
+                ItemEvent.Trigger(ItemEventType.PickupRangeEntered, Item, transform);
+            }
+        }
+            
+        void OnTriggerExit(Collider collider)
+        {
+            if (collider.CompareTag("Player"))
+            {
+                _isInRange = false;
+                // _promptManager?.HidePickupPrompt();
+                ItemEvent.Trigger(ItemEventType.PickupRangeExited, Item, transform);
+            }
+        }
+
+        public void PickItem()
+        {
+            Debug.Log("Picked: " + Item.ItemName);
+                
+        }
+        public void Interact()
+        {
+            PickItem();
+            
+        }
     }
 }

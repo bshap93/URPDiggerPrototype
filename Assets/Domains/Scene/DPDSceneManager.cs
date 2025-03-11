@@ -1,4 +1,5 @@
-﻿using Lightbug.CharacterControllerPro.Core;
+﻿using Domains.Input;
+using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Demo;
 using UnityEngine;
 
@@ -81,23 +82,15 @@ namespace Domains.Scene
 
         void Update()
         {
+            int pressedKey = CustomInputBindings.GetPressedNumberKey();
 
-            for (int index = 0; index < references.Length; index++)
+            if (pressedKey != -1 && pressedKey < references.Length && references[pressedKey] != null)
             {
-                if (references[index] == null)
-                    break;
-
-                if (Input.GetKeyDown(KeyCode.Alpha1 + index) || Input.GetKeyDown(KeyCode.Keypad1 + index))
-                {
-                    GoTo(references[index]);
-                    break;
-                }
+                GoTo(references[pressedKey]);
             }
 
 
-
-
-            if (Input.GetKeyDown(KeyCode.V))
+            if (CustomInputBindings.IsChangePerspectivePressed())
             {
                 // If the Camera3D is present, change between First person and Third person mode.
                 if (camera != null)
