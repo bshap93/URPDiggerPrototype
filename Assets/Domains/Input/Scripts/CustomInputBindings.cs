@@ -14,6 +14,7 @@ namespace Domains.Input
         static readonly KeyCode changePerspectiveKey = KeyCode.V;
         static readonly KeyCode persistanceKey = KeyCode.P;
         static readonly KeyCode deletionKey = KeyCode.Alpha0;
+        static readonly KeyCode cancelKey = KeyCode.Escape;
 
         // Methods to check input (abstraction layer)
         public static bool IsInteractPressed()
@@ -55,6 +56,11 @@ namespace Domains.Input
                     return i; // Returns the number key that was pressed (0 = "1", 1 = "2", etc.)
 
             return -1; // No number key was pressed
+        }
+
+        public static bool IsCancelPressed()
+        {
+            return UnityEngine.Input.GetKeyDown(cancelKey);
         }
     }
 }

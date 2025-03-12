@@ -2,59 +2,37 @@
 using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Demo;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace Domains.Scene
+namespace Domains.Scene.Scripts
 {
-
     public class DpdSceneManager : MonoBehaviour
     {
-        [Header("Character")]
-
-        [SerializeField]
-        CharacterActor characterActor = null;
+        [Header("Character")] [SerializeField] CharacterActor characterActor;
 
 
-        [Header("Scene references")]
-
-        [SerializeField]
-        CharacterReferenceObject[] references = null;
-
-        [Header("UI")]
+        [Header("Scene references")] [SerializeField]
+        CharacterReferenceObject[] references;
 
 
-        [SerializeField]
-        bool hideAndConfineCursor = true;
+        [SerializeField] bool hideAndConfineCursor = true;
 
-        [Header("Graphics")]
+        [Header("Graphics")] [SerializeField] GameObject graphicsObject;
 
-        [SerializeField]
-        GameObject graphicsObject = null;
-
-        [Header("Camera")]
-        [SerializeField]
+        [Header("Camera")] [SerializeField]
 #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
-        Camera3D camera = null;
+        Camera3D camera;
 #pragma warning restore CS0108 // Member hides inherited member; missing new keyword
 
-        [UnityEngine.Serialization.FormerlySerializedAs("frameRateText")]
-        [SerializeField]
-
+        [FormerlySerializedAs("frameRateText")] [SerializeField]
 
         // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+        Renderer[] graphicsRenderers;
+        readonly Renderer[] capsuleRenderers = null;
 
-        Renderer[] graphicsRenderers = null;
-        Renderer[] capsuleRenderers = null;
+        [Header("UI")] bool isPaused;
 
-        NormalMovement normalMovement = null;
-
-        float GetRefreshRateValue()
-        {
-#if UNITY_2022_2_OR_NEWER
-            return (float)Screen.currentResolution.refreshRateRatio.value;
-#else
-            return Screen.currentResolution.refreshRate;
-#endif
-        }
+        NormalMovement normalMovement;
 
         void Awake()
         {
@@ -65,9 +43,11 @@ namespace Domains.Scene
             if (normalMovement != null && camera != null)
             {
                 if (camera.cameraMode == Camera3D.CameraMode.FirstPerson)
-                    normalMovement.lookingDirectionParameters.lookingDirectionMode = LookingDirectionParameters.LookingDirectionMode.ExternalReference;
+                    normalMovement.lookingDirectionParameters.lookingDirectionMode =
+                        LookingDirectionParameters.LookingDirectionMode.ExternalReference;
                 else
-                    normalMovement.lookingDirectionParameters.lookingDirectionMode = LookingDirectionParameters.LookingDirectionMode.Movement;
+                    normalMovement.lookingDirectionParameters.lookingDirectionMode =
+                        LookingDirectionParameters.LookingDirectionMode.Movement;
             }
 
 
@@ -76,22 +56,20 @@ namespace Domains.Scene
 
             Cursor.visible = !hideAndConfineCursor;
             Cursor.lockState = hideAndConfineCursor ? CursorLockMode.Locked : CursorLockMode.None;
-
-
         }
 
         void Update()
         {
-            int pressedKey = CustomInputBindings.GetPressedNumberKey();
+            var pressedKey = CustomInputBindings.GetPressedNumberKey();
+
+            if (CustomInputBindings.IsCancelPressed()) TogglePause();
+
 
             if (pressedKey != -1 && pressedKey < references.Length && references[pressedKey] != null)
-            {
                 GoTo(references[pressedKey]);
-            }
 
 
             if (CustomInputBindings.IsChangePerspectivePressed())
-            {
                 // If the Camera3D is present, change between First person and Third person mode.
                 if (camera != null)
                 {
@@ -100,35 +78,48 @@ namespace Domains.Scene
                     if (normalMovement != null)
                     {
                         if (camera.cameraMode == Camera3D.CameraMode.FirstPerson)
-                            normalMovement.lookingDirectionParameters.lookingDirectionMode = LookingDirectionParameters.LookingDirectionMode.ExternalReference;
+                            normalMovement.lookingDirectionParameters.lookingDirectionMode =
+                                LookingDirectionParameters.LookingDirectionMode.ExternalReference;
                         else
-                            normalMovement.lookingDirectionParameters.lookingDirectionMode = LookingDirectionParameters.LookingDirectionMode.Movement;
-
+                            normalMovement.lookingDirectionParameters.lookingDirectionMode =
+                                LookingDirectionParameters.LookingDirectionMode.Movement;
                     }
                 }
-            }
-
         }
 
+        void TogglePause()
+        {
+            isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0f : 1f;
+            Cursor.visible = isPaused;
+            Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        float GetRefreshRateValue()
+        {
+#if UNITY_2022_2_OR_NEWER
+            return (float)Screen.currentResolution.refreshRateRatio.value;
+#else
+            return Screen.currentResolution.refreshRate;
+#endif
+        }
 
 
         void HandleVisualObjects(bool showCapsule)
         {
             if (capsuleRenderers != null)
-                for (int i = 0; i < capsuleRenderers.Length; i++)
+                for (var i = 0; i < capsuleRenderers.Length; i++)
                     capsuleRenderers[i].enabled = showCapsule;
 
             if (graphicsRenderers != null)
-                for (int i = 0; i < graphicsRenderers.Length; i++)
+                for (var i = 0; i < graphicsRenderers.Length; i++)
                 {
-                    SkinnedMeshRenderer skinnedMeshRenderer = (SkinnedMeshRenderer)graphicsRenderers[i];
+                    var skinnedMeshRenderer = (SkinnedMeshRenderer)graphicsRenderers[i];
                     if (skinnedMeshRenderer != null)
                         skinnedMeshRenderer.forceRenderingOff = showCapsule;
                     else
                         graphicsRenderers[i].enabled = !showCapsule;
                 }
-
-
         }
 
         void GoTo(CharacterReferenceObject reference)
@@ -144,8 +135,6 @@ namespace Domains.Scene
 
             characterActor.upDirectionReference = reference.verticalAlignmentReference;
             characterActor.upDirectionReferenceMode = VerticalAlignmentSettings.VerticalReferenceMode.Away;
-
         }
     }
-
 }

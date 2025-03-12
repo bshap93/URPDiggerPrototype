@@ -7,22 +7,21 @@ namespace Domains.Items
     public class ItemSelectableTrigger : MonoBehaviour
     {
         public BaseItem Item;
-        
-        [SerializeField]
-        MMFeedbacks selectionFeedbacks;
-        
+
+        [SerializeField] MMFeedbacks selectionFeedbacks;
+
         public bool NotPickable;
-        ManualItemPicker _itemPicker;
-        
+        ItemPicker _itemPicker;
+
         // PlayerItemListPreviewManager _playerPreviewManager;
-        
+
         void Awake()
         {
-            _itemPicker = GetComponent<ManualItemPicker>();
-            
+            _itemPicker = GetComponent<ItemPicker>();
+
             if (_itemPicker == null)
-                _itemPicker = gameObject.AddComponent<ManualItemPicker>();
-            
+                _itemPicker = gameObject.AddComponent<ItemPicker>();
+
             _itemPicker.Item = Item;
         }
 
