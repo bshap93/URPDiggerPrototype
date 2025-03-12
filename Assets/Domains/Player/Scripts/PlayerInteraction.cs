@@ -1,5 +1,7 @@
 using Digger.Modules.Core.Sources;
+using Digger.Modules.Runtime.Sources;
 using Domains.Input;
+using Domains.Input.Scripts;
 using ThirdParty.Plugins.Digger.Demo;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,12 +20,14 @@ namespace Domains.Player.Scripts
 
         RuntimeDig _digClass;
         DiggerMaster _diggerMaster;
+        DiggerMasterRuntime _diggerMasterRuntime;
         int _lastTextureIndex = -1; // Track the last detected texture index
         bool _pickupPromptActive;
 
         void Start()
         {
             _diggerMaster = FindFirstObjectByType<DiggerMaster>();
+            _diggerMasterRuntime = FindFirstObjectByType<DiggerMasterRuntime>();
             _digClass = GetComponent<RuntimeDig>();
         }
 
@@ -34,6 +38,21 @@ namespace Domains.Player.Scripts
 
             if (CustomInputBindings.IsInteractPressed()) // Press E to interact
                 PerformInteraction();
+
+            if (CustomInputBindings.IsPersistanceKeyPressed())
+            {
+                _diggerMasterRuntime.PersistAll();
+#if !UNITY_EDITOR
+                Debug.Log("Persisted all modified chunks");
+#endif
+            }
+            else if (CustomInputBindings.IsDeletionKeyPressed())
+            {
+                _diggerMasterRuntime.DeleteAllPersistedData();
+#if !UNITY_EDITOR
+                Debug.Log("Deleted all persisted data");
+#endif
+            }
         }
 
         void OnDrawGizmos()
@@ -43,6 +62,7 @@ namespace Domains.Player.Scripts
                 playerCamera.transform.position,
                 playerCamera.transform.TransformDirection(Vector3.forward) * interactionDistance);
         }
+
 
         void PerformRaycastCheck()
         {
@@ -56,39 +76,40 @@ namespace Domains.Player.Scripts
             var rayOrigin = playerCamera.transform.position;
             var rayDirection = playerCamera.transform.forward;
 
-            // ✅ Use one raycast that detects both interactables and diggable terrain
             if (Physics.Raycast(
                     rayOrigin, rayDirection, out hit, interactionDistance, interactableLayer | terrainLayer))
             {
-                // ✅ First, check if the object is interactable
                 var interactable = hit.collider.GetComponent<IInteractable>();
+                var button = hit.collider.GetComponent<ButtonActivated>();
+
                 if (interactable != null)
                 {
                     reticle.color = interactReticleColor;
                     ShowPickupPrompt(hit.collider.gameObject);
-                    return;
-                }
 
-                // ✅ If not interactable, check if it's diggable terrain
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("DiggableTerrain"))
-                {
-                    reticle.color = interactReticleColor;
-                    DetectTexture(hit); // Calls the terrain texture detection
+                    // ✅ Show button prompt if applicable
+                    if (button != null) button.ShowPrompt();
                     return;
                 }
             }
 
-            // If nothing is hit, reset reticle and hide UI prompts
+            // Reset if no interactable is found
             reticle.color = defaultReticleColor;
             if (_pickupPromptActive)
                 HidePickupPrompt();
+
+            HideAllPrompts(); // Hide button prompts if nothing is targeted
+        }
+
+        void HideAllPrompts()
+        {
+            foreach (var button in FindObjectsOfType<ButtonActivated>()) button.HidePrompt();
         }
 
 
         void ShowPickupPrompt(GameObject item)
         {
             _pickupPromptActive = true;
-            Debug.Log($"Press E to pick up {item.name}");
         }
 
         void HidePickupPrompt()
@@ -100,10 +121,10 @@ namespace Domains.Player.Scripts
         void DetectTexture(RaycastHit hit)
         {
             var index = TextureDetector.GetTextureIndex(hit, out var terrain);
-            if (terrain != null && index < terrain.terrainData.terrainLayers.Length)
-                Debug.Log($"Texture detected: {terrain.terrainData.terrainLayers[index].name}");
-            else
-                Debug.Log("No texture detected or object is not a terrain.");
+            // if (terrain != null && index < terrain.terrainData.terrainLayers.Length)
+            //     Debug.Log($"Texture detected: {terrain.terrainData.terrainLayers[index].name}");
+            // else
+            //     Debug.Log("No texture detected or object is not a terrain.");
         }
 
         void PerformInteraction()

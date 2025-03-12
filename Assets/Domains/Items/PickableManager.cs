@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Domains.Items
@@ -7,17 +8,19 @@ namespace Domains.Items
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-        
         }
 
         // Update is called once per frame
         void Update()
         {
-        
         }
         public static bool IsItemPicked(string uniqueID)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+        public static void ResetPickedItems()
+        {
+            throw new NotImplementedException();
         }
     }
 }
