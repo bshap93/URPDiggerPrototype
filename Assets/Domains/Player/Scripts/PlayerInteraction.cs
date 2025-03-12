@@ -1,8 +1,8 @@
+using Digger.Demo;
 using Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
 using Domains.Input;
 using Domains.Input.Scripts;
-using ThirdParty.Plugins.Digger.Demo;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,7 +68,7 @@ namespace Domains.Player.Scripts
         {
             if (playerCamera == null)
             {
-                Debug.LogError("PlayerInteraction: No camera assigned!");
+                UnityEngine.Debug.LogError("PlayerInteraction: No camera assigned!");
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace Domains.Player.Scripts
         void HidePickupPrompt()
         {
             _pickupPromptActive = false;
-            Debug.Log(""); // Clear message
+            UnityEngine.Debug.Log(""); // Clear message
         }
 
         void DetectTexture(RaycastHit hit)
@@ -131,7 +131,7 @@ namespace Domains.Player.Scripts
         {
             if (playerCamera == null)
             {
-                Debug.LogError("PlayerInteraction: No camera assigned!");
+                UnityEngine.Debug.LogError("PlayerInteraction: No camera assigned!");
                 return;
             }
 

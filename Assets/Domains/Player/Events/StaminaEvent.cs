@@ -1,7 +1,7 @@
 ﻿using System;
 using MoreMountains.Tools;
 
-namespace Core.Events
+namespace Domains.Player.Events
 {
     [Serializable]
     public enum StaminaEventType

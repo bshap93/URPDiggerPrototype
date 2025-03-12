@@ -23,10 +23,6 @@ namespace Domains.Player.Scripts
 
         string _savePath;
 
-        void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
 
         void Start()
         {

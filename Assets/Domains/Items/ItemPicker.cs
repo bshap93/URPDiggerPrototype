@@ -1,4 +1,5 @@
 using System;
+using Domains.Player.Scripts;
 using Gameplay.Events;
 using MoreMountains.Feedbacks;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace Domains.Items
             if (string.IsNullOrEmpty(UniqueID))
             {
                 UniqueID = Guid.NewGuid().ToString(); // Generate only if unset
-                Debug.LogWarning($"Generated new UniqueID for {gameObject.name}: {UniqueID}");
+                UnityEngine.Debug.LogWarning($"Generated new UniqueID for {gameObject.name}: {UniqueID}");
             }
         }
 
@@ -44,7 +45,7 @@ namespace Domains.Items
 
             _targetInventory = FindFirstObjectByType<Inventory>();
 
-            if (_targetInventory == null) Debug.LogWarning("No inventory found in scene");
+            if (_targetInventory == null) UnityEngine.Debug.LogWarning("No inventory found in scene");
 
             if (pickedMmFeedbacks != null) pickedMmFeedbacks.Initialization(gameObject);
         }
@@ -84,7 +85,7 @@ namespace Domains.Items
 
         public void PickItem()
         {
-            Debug.Log("Picked: " + Item.ItemName);
+            UnityEngine.Debug.Log("Picked: " + Item.ItemName);
             Destroy(gameObject);
         }
     }

@@ -34,7 +34,7 @@ namespace Domains.Input.Scripts
             if (OnActivation != null)
             {
                 OnActivation.Invoke();
-                Debug.Log("Button Activated!");
+                UnityEngine.Debug.Log("Button Activated!");
             }
         }
 

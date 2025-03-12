@@ -1,4 +1,4 @@
-using Core.Events;
+using Domains.Player.Events;
 using UnityEngine;
 
 public class BedObject : MonoBehaviour

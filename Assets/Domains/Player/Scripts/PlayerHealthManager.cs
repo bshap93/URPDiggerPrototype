@@ -1,5 +1,3 @@
-#if UNITY_EDITOR
-
 using System;
 using Core.Events;
 using Domains.Player.Events;
@@ -9,7 +7,9 @@ using Gameplay.Character;
 using MoreMountains.Tools;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
+
+#if UNITY_EDITOR
+
 
 namespace Domains.Player.Scripts
 {
@@ -33,19 +33,16 @@ namespace Domains.Player.Scripts
         public HealthBarUpdater healthBarUpdater;
         public CharacterStatProfile characterStatProfile;
 
-        [FormerlySerializedAs("ImmuneToDamage")]
         public bool immuneToDamage;
 
         string _savePath;
 
         void Awake()
         {
-            DontDestroyOnLoad(gameObject);
-
             if (characterStatProfile != null)
                 InitialCharacterHealth = characterStatProfile.InitialMaxHealth;
             else
-                Debug.LogError("CharacterStatProfile not set in PlayerHealthManager");
+                UnityEngine.Debug.LogError("CharacterStatProfile not set in PlayerHealthManager");
         }
 
         void Start()
@@ -72,7 +69,7 @@ namespace Domains.Player.Scripts
 
         public void Initialize()
         {
-            Debug.Log("Initializing player health");
+            UnityEngine.Debug.Log("Initializing player health");
             ResetPlayerHealth();
             healthBarUpdater.Initialize();
         }
@@ -135,8 +132,9 @@ namespace Domains.Player.Scripts
         public void LoadPlayerHealth()
         {
             var saveFilePath = GetSaveFilePath();
-            var exists = ES3.FileExists(saveFilePath);
-            if (exists)
+            UnityEngine.Debug.Log($"Checking for saved health data at: {saveFilePath}");
+
+            if (ES3.FileExists(saveFilePath))
             {
                 HealthPoints = ES3.Load<float>("HealthPoints", saveFilePath);
                 MaxHealthPoints = ES3.Load<float>("MaxHealthPoints", saveFilePath);
@@ -144,7 +142,7 @@ namespace Domains.Player.Scripts
             }
             else
             {
-                Debug.LogError("No saved health data found");
+                UnityEngine.Debug.LogError($"No saved health data found at {saveFilePath}");
                 ResetPlayerHealth();
                 healthBarUpdater.Initialize();
             }
@@ -154,18 +152,36 @@ namespace Domains.Player.Scripts
             var characterStatProfile =
                 Resources.Load<CharacterStatProfile>(CharacterResourcePaths.CharacterStatProfileFilePath);
 
-            HealthPoints = characterStatProfile.InitialMaxHealth;
-            MaxHealthPoints = characterStatProfile.InitialMaxHealth;
+            if (characterStatProfile == null)
+            {
+                UnityEngine.Debug.LogError("CharacterStatProfile not found! Using default values.");
+                HealthPoints = 20f; // Default fallback
+                MaxHealthPoints = 20f;
+            }
+            else
+            {
+                HealthPoints = characterStatProfile.InitialMaxHealth;
+                MaxHealthPoints = characterStatProfile.InitialMaxHealth;
+            }
 
             SavePlayerHealth();
         }
 
+
         public static void SavePlayerHealth()
         {
-            ES3.Save("HealthPoints", HealthPoints, "PlayerHealth.es3");
-            ES3.Save("MaxHealthPoints", MaxHealthPoints, "PlayerHealth.es3");
-            Debug.Log("Player health saved: " + HealthPoints + " / " + MaxHealthPoints);
+            var saveFilePath = GetSaveFilePath();
+            UnityEngine.Debug.Log($"Saving player health to: {saveFilePath}");
+
+            ES3.Save("HealthPoints", HealthPoints, saveFilePath);
+            ES3.Save("MaxHealthPoints", MaxHealthPoints, saveFilePath);
+
+            if (ES3.FileExists(saveFilePath))
+                UnityEngine.Debug.Log($"✅ Successfully saved health data at {saveFilePath}");
+            else
+                UnityEngine.Debug.LogError($"❌ Failed to save health data at {saveFilePath}");
         }
+
 
         public bool HasSavedData()
         {

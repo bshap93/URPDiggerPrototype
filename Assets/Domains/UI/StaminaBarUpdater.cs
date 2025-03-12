@@ -1,4 +1,4 @@
-using Core.Events;
+using Domains.Player.Events;
 using Gameplay.Player.Stats;
 using MoreMountains.Tools;
 using TMPro;

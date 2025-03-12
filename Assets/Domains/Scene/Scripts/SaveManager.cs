@@ -37,7 +37,6 @@ namespace Domains.Scene.Scripts
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
 
             // Initialize managers if needed
             if (pickableManager == null)
@@ -55,15 +54,28 @@ namespace Domains.Scene.Scripts
             if (playerStaminaManager == null)
             {
                 playerStaminaManager = GetComponentInChildren<PlayerStaminaManager>(true);
-                if (playerStaminaManager == null) Debug.LogError("PlayerStaminaManager not found in SaveManager");
+                if (playerStaminaManager == null)
+                    UnityEngine.Debug.LogError("PlayerStaminaManager not found in SaveManager");
             }
 
             if (playerHealthManager == null)
             {
                 playerHealthManager = GetComponentInChildren<PlayerHealthManager>(true);
-                if (playerHealthManager == null) Debug.LogError("PlayerHealthManager not found in SaveManager");
+                if (playerHealthManager == null)
+                    UnityEngine.Debug.LogError("PlayerHealthManager not found in SaveManager");
             }
         }
+
+        void Update()
+        {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
+            {
+                PlayerHealthManager.SavePlayerHealth();
+                PlayerStaminaManager.SavePlayerStamina();
+                UnityEngine.Debug.Log("Manual Save Triggered!");
+            }
+        }
+
 
         string GetSaveFileName(int slot)
         {
@@ -74,6 +86,8 @@ namespace Domains.Scene.Scripts
         {
             // inventoryManager?.SaveInventory();
             PlayerStaminaManager.SavePlayerStamina();
+            PlayerHealthManager.SavePlayerHealth();
+            UnityEngine.Debug.Log($"Save Path: {Application.persistentDataPath}");
         }
 
         public bool LoadAll()
@@ -84,6 +98,7 @@ namespace Domains.Scene.Scripts
 
             // if (inventoryLoaded) inventoryManager.LoadInventory();
             if (staminaLoaded) playerStaminaManager.LoadPlayerStamina();
+            if (healthLoaded) playerHealthManager.LoadPlayerHealth();
 
             // Load pickable items and destroyed containers
             pickableManager?.LoadPickedItems();

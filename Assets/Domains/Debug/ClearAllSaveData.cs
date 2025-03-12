@@ -1,7 +1,7 @@
 ﻿using Gameplay.Config;
 using UnityEditor;
 
-namespace Project.Editor.Utilities
+namespace Domains.Debug
 {
     public static class DebugMenu
     {

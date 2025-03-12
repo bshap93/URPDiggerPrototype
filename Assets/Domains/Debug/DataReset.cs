@@ -1,4 +1,5 @@
-using Domains.Items;
+using Domains.Player.Scripts;
+using Gameplay.Player.Stats;
 using UnityEngine;
 
 namespace Gameplay.Config
@@ -23,8 +24,8 @@ namespace Gameplay.Config
             // InventoryPersistenceManager.Instance?.ResetInventory();
 
             // // Reset  Mutable Stats
-            // PlayerStaminaManager.ResetPlayerStamina();
-            // PlayerHealthManager.ResetPlayerHealth();
+            PlayerStaminaManager.ResetPlayerStamina();
+            PlayerHealthManager.ResetPlayerHealth();
             //
             // PlayerAttributesProgressionManager.ResetPlayerAttributesProgression();
 
