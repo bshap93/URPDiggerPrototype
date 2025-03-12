@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Domains.Mining.Scripts;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Domains.Input.Scripts

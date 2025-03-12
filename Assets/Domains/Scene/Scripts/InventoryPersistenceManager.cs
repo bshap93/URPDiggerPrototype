@@ -1,19 +1,25 @@
+#if UNITY_EDITOR
+
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace Domains.Scene.Scripts
 {
+    public static class InventoryPersistenceManagerDebug
+    {
+        [MenuItem("Debug/Reset Inventory")]
+        public static void ResetInventory()
+        {
+            InventoryPersistenceManager.ResetInventory();
+        }
+    }
+#endif
+
     public class InventoryPersistenceManager : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        }
+        
 
-        // Update is called once per frame
-        void Update()
-        {
-        }
         public void SaveInventory()
         {
             throw new NotImplementedException();
@@ -24,7 +30,11 @@ namespace Domains.Scene.Scripts
         }
         public void LoadInventory()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+        public static void ResetInventory()
+        {
+            throw new NotImplementedException();
         }
     }
 }

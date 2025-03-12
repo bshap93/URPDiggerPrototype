@@ -1,4 +1,5 @@
 using System;
+using Domains.Mining.Scripts;
 using Domains.Player.Scripts;
 using Gameplay.Events;
 using MoreMountains.Feedbacks;
@@ -85,7 +86,7 @@ namespace Domains.Items
 
         public void PickItem()
         {
-            UnityEngine.Debug.Log("Picked: " + Item.ItemName);
+            // UnityEngine.Debug.Log("Picked: " + Item.ItemName);
             Destroy(gameObject);
         }
     }

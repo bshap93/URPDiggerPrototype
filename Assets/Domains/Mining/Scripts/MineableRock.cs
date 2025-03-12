@@ -1,7 +1,4 @@
-using UnityEngine;
-
 // using RayFire;
-using UnityEngine.Serialization;
 
 // public class MineableRock : MonoBehaviour, IInteractable
 // {
@@ -113,7 +110,10 @@ using UnityEngine.Serialization;
 // }
 
 
-public interface IInteractable
+namespace Domains.Mining.Scripts
 {
-    void Interact();
+    public interface IInteractable
+    {
+        void Interact();
+    }
 }

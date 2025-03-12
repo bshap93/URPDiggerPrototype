@@ -9,12 +9,6 @@ namespace Domains.Items
     {
         public List<BaseItem> Content;
 
-        [Header("Debug")]
-        /// If true, will draw the contents of the inventory in its inspector
-        [Tooltip(
-            "The Inventory component is like the database and controller part of your inventory. It won't show anything on screen, you'll need also an InventoryDisplay for that. Here you can decide whether or not you want to output a debug content in the inspector (useful for debugging).")]
-        public bool DrawContentInInspector;
-
         public float WeightLimit;
 
         public MMFeedbacks InventoryFullFeedbacks;

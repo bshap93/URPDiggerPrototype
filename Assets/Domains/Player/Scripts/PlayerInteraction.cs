@@ -3,6 +3,7 @@ using Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
 using Domains.Input;
 using Domains.Input.Scripts;
+using Domains.Mining.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -110,6 +111,7 @@ namespace Domains.Player.Scripts
         void ShowPickupPrompt(GameObject item)
         {
             _pickupPromptActive = true;
+            UnityEngine.Debug.Log($"Press E to pickup {item.name}");
         }
 
         void HidePickupPrompt()
