@@ -1,6 +1,7 @@
 ﻿using Domains.Items;
 using MoreMountains.Tools;
 using UnityEngine;
+
 public enum ItemEventType
 {
     PickupRangeEntered,
@@ -14,7 +15,7 @@ namespace Gameplay.Events
 {
     public struct ItemEvent
     {
-        static ItemEvent e;
+        static ItemEvent _e;
 
         public BaseItem Item;
         public ItemEventType EventType;
@@ -24,12 +25,12 @@ namespace Gameplay.Events
         public static void Trigger(ItemEventType eventType, BaseItem inventoryItem, Transform itemTransform,
             int amount = 1)
         {
-            e.EventType = eventType;
-            e.Amount = amount;
-            e.Item = inventoryItem;
-            e.ItemTransform = itemTransform;
+            _e.EventType = eventType;
+            _e.Amount = amount;
+            _e.Item = inventoryItem;
+            _e.ItemTransform = itemTransform;
 
-            MMEventManager.TriggerEvent(e);
+            MMEventManager.TriggerEvent(_e);
         }
     }
 }

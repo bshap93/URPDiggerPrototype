@@ -6,10 +6,9 @@ using Domains.Items.Events;
 using UnityEditor;
 using UnityEngine;
 
-#if UNITY_EDITOR
-
 namespace Domains.Scene.Scripts
 {
+#if UNITY_EDITOR
     public static class InventoryPersistenceManagerDebug
     {
         [MenuItem("Debug/Reset Inventory")]

@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -6,6 +5,7 @@ using UnityEngine;
 
 namespace Domains.Player.Scripts
 {
+#if UNITY_EDITOR
     public static class PickableManagerDebug
     {
         [MenuItem("Debug/Reset Picked Items")]

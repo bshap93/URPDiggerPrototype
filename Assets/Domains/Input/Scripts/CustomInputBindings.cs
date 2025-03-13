@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Domains.Input
+namespace Domains.Input.Scripts
 {
     public class CustomInputBindings
     {
@@ -15,6 +15,7 @@ namespace Domains.Input
         static readonly KeyCode persistanceKey = KeyCode.P;
         static readonly KeyCode deletionKey = KeyCode.Alpha0;
         static readonly KeyCode cancelKey = KeyCode.Escape;
+        static readonly int mineMouseButton = 0;
 
         // Methods to check input (abstraction layer)
         public static bool IsInteractPressed()
@@ -61,6 +62,11 @@ namespace Domains.Input
         public static bool IsCancelPressed()
         {
             return UnityEngine.Input.GetKeyDown(cancelKey);
+        }
+
+        public static bool IsMineMouseButtonPressed()
+        {
+            return UnityEngine.Input.GetMouseButtonDown(mineMouseButton);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Gameplay.Config;
 using UnityEditor;
 
+#if UNITY_EDITOR
 namespace Domains.Debug
 {
     public static class DebugMenu
@@ -12,3 +13,4 @@ namespace Domains.Debug
         }
     }
 }
+#endif

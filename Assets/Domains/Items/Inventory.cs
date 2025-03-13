@@ -78,7 +78,7 @@ namespace Domains.Items
 
         public virtual BaseItem GetItem(string itemID)
         {
-            return Content.Find(i => i.ItemID == itemID);
+            return Content.Find(i => i.ItemID == itemID) ?? null;
         }
 
         public virtual List<int> InventoryContains(string searchedItemID)

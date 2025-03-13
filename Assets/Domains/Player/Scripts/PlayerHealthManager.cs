@@ -8,11 +8,9 @@ using MoreMountains.Tools;
 using UnityEditor;
 using UnityEngine;
 
-#if UNITY_EDITOR
-
-
 namespace Domains.Player.Scripts
 {
+#if UNITY_EDITOR
     public static class PlayerHealthManagerDebug
     {
         [MenuItem("Debug/Reset Health")]

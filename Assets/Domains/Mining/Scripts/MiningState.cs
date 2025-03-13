@@ -1,5 +1,6 @@
 using Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
+using Domains.Input.Scripts;
 using Lightbug.CharacterControllerPro.Implementation;
 using UnityEngine;
 
@@ -65,7 +66,7 @@ namespace Domains.Mining.Scripts
         // Write your transitions here
         public override void CheckExitTransition()
         {
-            if (!CharacterActions.mine.value)
+            if (!CustomInputBindings.IsMineMouseButtonPressed())
             {
                 UnityEngine.Debug.Log("Mining State will be exited");
                 CharacterStateController.EnqueueTransition<MyNormalMovement>();

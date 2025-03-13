@@ -1,6 +1,4 @@
-﻿#if UNITY_EDITOR
-
-using Core.Events;
+﻿using Core.Events;
 using Domains.Player.Events;
 using Gameplay.Character;
 using Gameplay.Character.Stamina;
@@ -10,6 +8,7 @@ using UnityEngine;
 
 namespace Domains.Player.Scripts
 {
+#if UNITY_EDITOR
     public static class PlayerStaminaManagerDebug
     {
         [MenuItem("Debug/Reset Stamina")]

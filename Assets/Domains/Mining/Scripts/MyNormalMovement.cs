@@ -1,4 +1,5 @@
 ﻿using System;
+using Domains.Input.Scripts;
 using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Demo;
 using Lightbug.CharacterControllerPro.Implementation;
@@ -46,7 +47,7 @@ namespace Domains.Mining.Scripts
         protected bool groundedJumpAvailable;
         protected bool isAllowedToCancelJump;
         protected bool isCrouched;
-        protected Vector3 jumpDirection = default;
+        protected Vector3 jumpDirection;
 
 
         protected MaterialController materialController;
@@ -56,7 +57,7 @@ namespace Domains.Mining.Scripts
         float reductionDuration = 0.5f;
         protected float targetHeight = 1f;
 
-        protected Vector3 targetLookingDirection = default;
+        protected Vector3 targetLookingDirection;
 
         protected bool wantToCrouch;
         protected bool wantToRun;
@@ -126,7 +127,7 @@ namespace Domains.Mining.Scripts
 
         public override void CheckExitTransition()
         {
-            if (CharacterActions.mine.value)
+            if (CustomInputBindings.IsMineMouseButtonPressed())
             {
                 UnityEngine.Debug.Log("Mining State will be entered");
                 CharacterStateController.EnqueueTransition<MiningState>();

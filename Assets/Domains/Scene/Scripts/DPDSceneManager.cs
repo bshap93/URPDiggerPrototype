@@ -1,4 +1,4 @@
-﻿using Domains.Input;
+﻿using Domains.Input.Scripts;
 using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Demo;
 using UnityEngine;
