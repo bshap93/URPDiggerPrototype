@@ -41,15 +41,13 @@ namespace Domains.Scene.Scripts
             if (playerInventory == null)
             {
                 UnityEngine.Debug.LogError("InventoryPersistenceManager: No Inventory Assigned!");
-
                 return;
             }
 
-            var inventoryData = new List<ItemData>();
+            var inventoryData = new List<InventoryEntryData>();
 
-            foreach (var item in playerInventory.Content)
-                inventoryData.Add(new ItemData { itemID = item.ItemID, quantity = item.Quantity });
-
+            foreach (var entry in playerInventory.Content)
+                inventoryData.Add(new InventoryEntryData(entry.UniqueID, entry.BaseItem.ItemID));
 
             ES3.Save(INVENTORY_KEY, inventoryData, saveFilePath);
             UnityEngine.Debug.Log($"✅ Inventory saved at {saveFilePath}");
@@ -64,26 +62,27 @@ namespace Domains.Scene.Scripts
 
             if (!ES3.FileExists(saveFilePath))
             {
-                UnityEngine.Debug.LogError($"❌ No saved inventory data found at {saveFilePath}");
+                UnityEngine.Debug.LogWarning($"❌ No saved inventory data found at {saveFilePath}");
                 return;
             }
 
-            var loadedItems = ES3.Load<List<ItemData>>(INVENTORY_KEY, saveFilePath);
+            var loadedItems = ES3.Load<List<InventoryEntryData>>(INVENTORY_KEY, saveFilePath);
             playerInventory.Content.Clear();
 
             foreach (var itemData in loadedItems)
             {
-                var item = GetItemByID(itemData.itemID);
+                var item = GetItemByID(itemData.ItemID);
                 if (item != null)
                 {
-                    item.Quantity = itemData.quantity;
-                    playerInventory.Content.Add(item);
+                    var entry = new Inventory.InventoryEntry(itemData.UniqueID, item);
+                    playerInventory.Content.Add(entry);
                 }
             }
 
             InventoryEvent.Trigger(InventoryEventType.InventoryLoaded, playerInventory);
             UnityEngine.Debug.Log($"✅ Loaded inventory data from {saveFilePath}");
         }
+
         public static void ResetInventory()
         {
             UnityEngine.Debug.Log("[PlayerInventoryManager] Resetting Inventory");
@@ -91,21 +90,34 @@ namespace Domains.Scene.Scripts
             ES3.Save(INVENTORY_KEY, new List<BaseItem>(), GetSaveFilePath());
         }
 
-        static void RestoreInventory(Inventory inventory, List<BaseItem> inventoryContentData)
+        static void RestoreInventory(Inventory inventory, List<InventoryEntryData> inventoryContentData)
         {
-            foreach (var item in inventoryContentData) inventory.AddItem(item);
+            foreach (var itemData in inventoryContentData)
+            {
+                var item = GetItemByID(itemData.ItemID);
+                if (item != null)
+                {
+                    var entry = new Inventory.InventoryEntry(itemData.UniqueID, item); // Use saved UniqueID
+                    inventory.AddItem(entry);
+                }
+            }
         }
 
-        BaseItem GetItemByID(string itemID)
+        static BaseItem GetItemByID(string itemID)
         {
             return Resources.LoadAll<BaseItem>(RESOURCES_PATH).FirstOrDefault(i => i.ItemID == itemID);
         }
 
         [Serializable]
-        public class ItemData
+        public class InventoryEntryData
         {
-            public string itemID;
-            public int quantity;
+            public string UniqueID;
+            public string ItemID;
+            public InventoryEntryData(string itemUniqueID, string baseItemItemID)
+            {
+                UniqueID = itemUniqueID;
+                ItemID = baseItemItemID;
+            }
         }
     }
 }

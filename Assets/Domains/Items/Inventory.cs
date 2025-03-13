@@ -2,71 +2,36 @@ using System;
 using System.Collections.Generic;
 using Domains.Items.Events;
 using Domains.UI.Events;
-using Gameplay.Events;
 using MoreMountains.Feedbacks;
-using MoreMountains.Tools;
 using UnityEngine;
 
 namespace Domains.Items
 {
-    public class Inventory : MonoBehaviour, MMEventListener<ItemEvent>
+    public class Inventory : MonoBehaviour
     {
-        public List<BaseItem> Content;
+        public List<InventoryEntry> Content;
 
         public float WeightLimit;
 
         public MMFeedbacks InventoryFullFeedbacks;
 
-        void OnEnable()
-        {
-            this.MMEventStartListening();
-        }
-
-        void OnDisable()
-        {
-            this.MMEventStopListening();
-        }
-        public void OnMMEvent(ItemEvent eventType)
-        {
-            if (eventType.EventType == ItemEventType.Picked)
-            {
-                var added = AddItem(eventType.Item);
-                if (added)
-                {
-                    InventoryEvent.Trigger(InventoryEventType.ContentChanged, this);
-                }
-                else
-                {
-                    UnityEngine.Debug.LogWarning("Item not added to inventory");
-                    AlertEvent.Trigger(AlertType.ItemScrapped, eventType.Item.ItemName + " scrapped");
-                }
-            }
-        }
 
         public float CurrentWeight()
         {
             float weight = 0;
-            foreach (var item in Content) weight += item.ItemWeight;
+            foreach (var item in Content) weight += item.BaseItem.ItemWeight;
 
             return weight;
         }
 
         public float RemainingWeight()
         {
-            return WeightLimit - CurrentWeight();
+            return Mathf.Max(0, WeightLimit - CurrentWeight()); // Prevent negative weight values
         }
 
-        public virtual bool AddItem(BaseItem item)
+        public virtual bool AddItem(InventoryEntry item)
         {
-            var existingItem = Content.Find(i => i.ItemID == item.ItemID);
-
-            if (existingItem != null)
-            {
-                existingItem.Quantity += item.Quantity;
-                return true;
-            }
-
-            if (CurrentWeight() + item.ItemWeight > WeightLimit)
+            if (CurrentWeight() + item.BaseItem.ItemWeight > WeightLimit)
             {
                 UnityEngine.Debug.LogWarning("Inventory is full");
                 InventoryFullFeedbacks?.PlayFeedbacks();
@@ -74,11 +39,13 @@ namespace Domains.Items
                 return false;
             }
 
-            Content.Add(item);
+            Content.Add(item); // Always add as a new entry, even if identical items exist
+            InventoryEvent.Trigger(InventoryEventType.ContentChanged, this);
             return true;
         }
 
-        public virtual bool RemoveItem(BaseItem item)
+
+        public virtual bool RemoveItem(InventoryEntry item)
         {
             if (!Content.Contains(item))
             {
@@ -89,9 +56,9 @@ namespace Domains.Items
             return Content.Remove(item);
         }
 
-        public virtual bool RemoveItem(string itemID)
+        public virtual bool RemoveItem(string uniqueID)
         {
-            var item = Content.Find(i => i.ItemID == itemID);
+            var item = Content.Find(i => i.UniqueID == uniqueID);
             if (item == null)
             {
                 UnityEngine.Debug.LogWarning("Item not found in inventory");
@@ -103,22 +70,21 @@ namespace Domains.Items
 
         public virtual int GetQuantity(string itemID)
         {
-            return Content.FindAll(i => i.ItemID == itemID).Count;
+            return Content.FindAll(i => i.BaseItem.ItemID == itemID).Count;
         }
 
-        public virtual BaseItem GetItem(string itemID)
+        public virtual InventoryEntry GetItem(string uniqueID)
         {
-            return Content.Find(i => i.ItemID == itemID) ?? null;
+            return Content.Find(i => i.UniqueID == uniqueID) ?? null;
         }
 
-        public virtual List<int> InventoryContains(string searchedItemID)
+        public virtual List<int> InventoryContainsItemType(string searchedItemID)
         {
             var list = new List<int>();
 
             for (var i = 0; i < Content.Count; i++)
-                if (!BaseItem.IsNull(Content[i]))
-                    if (Content[i].ItemID == searchedItemID)
-                        list.Add(i);
+                if (Content[i].BaseItem.ItemID == searchedItemID)
+                    list.Add(i);
 
             return list;
         }
@@ -134,9 +100,22 @@ namespace Domains.Items
         }
         public void EmptyInventory()
         {
-            Content = new List<BaseItem>();
+            Content = new List<InventoryEntry>();
 
             InventoryEvent.Trigger(InventoryEventType.ContentChanged, this);
+        }
+
+        [Serializable]
+        public class InventoryEntry
+        {
+            public string UniqueID;
+            public BaseItem BaseItem;
+
+            public InventoryEntry(string uniqueID, BaseItem item)
+            {
+                UniqueID = uniqueID;
+                BaseItem = item;
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using Domains.Mining.Scripts;
 using Domains.Player.Scripts;
-using Gameplay.Events;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace Domains.Items
     public class ItemPicker : MonoBehaviour, IInteractable
     {
         public string UniqueID;
-        public BaseItem Item;
+        public BaseItem ItemType;
         public int Quantity = 1;
 
         [Header("Feedbacks")] [Tooltip("Feedbacks to play when the item is picked up")]
@@ -40,8 +39,6 @@ namespace Domains.Items
             {
                 Destroy(gameObject);
                 return;
-
-                // _promptManager = FindObjectOfType<PromptManager>();
             }
 
             _targetInventory = FindFirstObjectByType<Inventory>();
@@ -62,22 +59,12 @@ namespace Domains.Items
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
-            {
-                _isInRange = true;
-                // _promptManager?.ShowPickupPrompt("Press F to pick up");
-                ItemEvent.Trigger(ItemEventType.PickupRangeEntered, Item, transform);
-            }
+            if (other.CompareTag("Player")) _isInRange = true;
         }
 
         void OnTriggerExit(Collider collider)
         {
-            if (collider.CompareTag("Player"))
-            {
-                _isInRange = false;
-                // _promptManager?.HidePickupPrompt();
-                ItemEvent.Trigger(ItemEventType.PickupRangeExited, Item, transform);
-            }
+            if (collider.CompareTag("Player")) _isInRange = false;
         }
         public void Interact()
         {
@@ -86,8 +73,21 @@ namespace Domains.Items
 
         public void PickItem()
         {
-            ItemEvent.Trigger(ItemEventType.Picked, Item, transform);
-            Destroy(gameObject);
+            if (_targetInventory != null)
+            {
+                // Check if inventory already contains this UniqueID
+                if (_targetInventory.GetItem(UniqueID) != null)
+                {
+                    UnityEngine.Debug.LogWarning("Item already in inventory! Skipping pickup.");
+                    return;
+                }
+
+                var entry = new Inventory.InventoryEntry(UniqueID, ItemType);
+                if (_targetInventory.AddItem(entry))
+                    Destroy(gameObject);
+                else
+                    UnityEngine.Debug.LogWarning("Inventory full! Cannot pick up item.");
+            }
         }
     }
 }

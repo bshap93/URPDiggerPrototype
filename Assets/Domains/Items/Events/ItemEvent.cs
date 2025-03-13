@@ -18,11 +18,11 @@ namespace Gameplay.Events
         static ItemEvent _e;
 
         // Amount is embedded in the item
-        public BaseItem Item;
+        public Inventory.InventoryEntry Item;
         public ItemEventType EventType;
         public Transform ItemTransform;
 
-        public static void Trigger(ItemEventType eventType, BaseItem inventoryItem, Transform transform)
+        public static void Trigger(ItemEventType eventType, Inventory.InventoryEntry inventoryItem, Transform transform)
         {
             _e.EventType = eventType;
             _e.Item = inventoryItem;

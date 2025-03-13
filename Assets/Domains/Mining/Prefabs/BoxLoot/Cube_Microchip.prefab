@@ -123,8 +123,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 380f9b65545dc3b488923b80b2b83bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UniqueID: 1
-  Item: {fileID: 11400000, guid: dad5d6fc21478914290421293e4d0469, type: 2}
+  UniqueID: 
+  ItemType: {fileID: 11400000, guid: dad5d6fc21478914290421293e4d0469, type: 2}
   Quantity: 1
   pickedMmFeedbacks: {fileID: 0}
   soldMmFeedbacks: {fileID: 0}
