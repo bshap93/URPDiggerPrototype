@@ -10,7 +10,6 @@ namespace Domains.Input.Scripts
         static readonly KeyCode crouchKey = KeyCode.LeftControl;
         static readonly KeyCode runKey = KeyCode.LeftShift;
         static KeyCode alpha1Key = KeyCode.Alpha1;
-        static KeyCode keypad1Key = KeyCode.Keypad1;
         static readonly KeyCode changePerspectiveKey = KeyCode.V;
         static readonly KeyCode persistanceKey = KeyCode.P;
         static readonly KeyCode deletionKey = KeyCode.Alpha0;

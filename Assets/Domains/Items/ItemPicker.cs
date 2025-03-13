@@ -86,7 +86,7 @@ namespace Domains.Items
 
         public void PickItem()
         {
-            // UnityEngine.Debug.Log("Picked: " + Item.ItemName);
+            ItemEvent.Trigger(ItemEventType.Picked, Item, transform);
             Destroy(gameObject);
         }
     }

@@ -102,8 +102,6 @@ namespace Domains.UI
             {
                 _bar.UpdateBar(_currentHealth, 0, _maxHealth);
             }
-
-            UnityEngine.Debug.Log("Health bar initialized");
         }
     }
 }

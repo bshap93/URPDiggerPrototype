@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -6475825427056405351}
   - component: {fileID: -82563081381324768}
   m_Layer: 0
-  m_Name: Cube_Metal_Grunge
+  m_Name: Cube_Steel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8879301513546030910}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.8274266, y: 0.5487224, z: -0.031178575, w: 0.115312085}
+  m_LocalRotation: {x: 0.82742774, y: 0.54872113, z: -0.031175938, w: 0.11531055}
   m_LocalPosition: {x: 0.13457489, y: -4.823721, z: 0.037109375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UniqueID: 1
-  Item: {fileID: 0}
+  Item: {fileID: 11400000, guid: 0586b7fb6a837854d959dc2fbfcd8ba2, type: 2}
   Quantity: 1
   pickedMmFeedbacks: {fileID: 0}
   soldMmFeedbacks: {fileID: 0}

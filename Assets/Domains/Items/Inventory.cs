@@ -1,18 +1,47 @@
 using System;
 using System.Collections.Generic;
 using Domains.Items.Events;
+using Domains.UI.Events;
+using Gameplay.Events;
 using MoreMountains.Feedbacks;
+using MoreMountains.Tools;
 using UnityEngine;
 
 namespace Domains.Items
 {
-    public class Inventory : MonoBehaviour
+    public class Inventory : MonoBehaviour, MMEventListener<ItemEvent>
     {
         public List<BaseItem> Content;
 
         public float WeightLimit;
 
         public MMFeedbacks InventoryFullFeedbacks;
+
+        void OnEnable()
+        {
+            this.MMEventStartListening();
+        }
+
+        void OnDisable()
+        {
+            this.MMEventStopListening();
+        }
+        public void OnMMEvent(ItemEvent eventType)
+        {
+            if (eventType.EventType == ItemEventType.Picked)
+            {
+                var added = AddItem(eventType.Item);
+                if (added)
+                {
+                    InventoryEvent.Trigger(InventoryEventType.ContentChanged, this);
+                }
+                else
+                {
+                    UnityEngine.Debug.LogWarning("Item not added to inventory");
+                    AlertEvent.Trigger(AlertType.ItemScrapped, eventType.Item.ItemName + " scrapped");
+                }
+            }
+        }
 
         public float CurrentWeight()
         {
@@ -41,6 +70,7 @@ namespace Domains.Items
             {
                 UnityEngine.Debug.LogWarning("Inventory is full");
                 InventoryFullFeedbacks?.PlayFeedbacks();
+                AlertEvent.Trigger(AlertType.InventoryFull, "Inventory is full");
                 return false;
             }
 

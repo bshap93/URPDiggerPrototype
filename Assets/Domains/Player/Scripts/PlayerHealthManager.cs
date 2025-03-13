@@ -130,7 +130,6 @@ namespace Domains.Player.Scripts
         public void LoadPlayerHealth()
         {
             var saveFilePath = GetSaveFilePath();
-            UnityEngine.Debug.Log($"Checking for saved health data at: {saveFilePath}");
 
             if (ES3.FileExists(saveFilePath))
             {

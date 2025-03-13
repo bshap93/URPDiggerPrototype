@@ -147,14 +147,12 @@ namespace Domains.Player.Scripts
             var slotPath = ES3SlotManager.selectedSlotPath;
             var path = string.IsNullOrEmpty(slotPath) ? "PlayerStamina.es3" : $"{slotPath}/PlayerStamina.es3";
 
-            UnityEngine.Debug.Log($"[PlayerStaminaManager] Save file path resolved to: {path}");
             return path;
         }
 
         public void LoadPlayerStamina()
         {
             var saveFilePath = GetSaveFilePath();
-            UnityEngine.Debug.Log($"[PlayerStaminaManager] Checking for saved stamina data at: {saveFilePath}");
 
             if (ES3.FileExists(saveFilePath))
             {

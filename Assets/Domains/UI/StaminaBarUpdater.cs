@@ -100,8 +100,6 @@ namespace Gameplay.Character.Stamina
             {
                 _bar.UpdateBar(_currentStamina, 0, _maxStamina);
             }
-
-            Debug.Log("Stamina bar initialized");
         }
     }
 }

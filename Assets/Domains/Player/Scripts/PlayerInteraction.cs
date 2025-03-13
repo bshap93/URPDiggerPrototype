@@ -1,7 +1,6 @@
 using Digger.Demo;
 using Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
-using Domains.Input;
 using Domains.Input.Scripts;
 using Domains.Mining.Scripts;
 using UnityEngine;
@@ -22,7 +21,6 @@ namespace Domains.Player.Scripts
         RuntimeDig _digClass;
         DiggerMaster _diggerMaster;
         DiggerMasterRuntime _diggerMasterRuntime;
-        int _lastTextureIndex = -1; // Track the last detected texture index
         bool _pickupPromptActive;
 
         void Start()

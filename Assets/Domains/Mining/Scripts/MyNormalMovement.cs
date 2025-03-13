@@ -128,10 +128,7 @@ namespace Domains.Mining.Scripts
         public override void CheckExitTransition()
         {
             if (CustomInputBindings.IsMineMouseButtonPressed())
-            {
-                UnityEngine.Debug.Log("Mining State will be entered");
                 CharacterStateController.EnqueueTransition<MiningState>();
-            }
         }
 
         public override void ExitBehaviour(float dt, CharacterState toState)
