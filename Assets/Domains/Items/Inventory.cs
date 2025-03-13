@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Domains.Items.Events;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
@@ -28,6 +29,14 @@ namespace Domains.Items
 
         public virtual bool AddItem(BaseItem item)
         {
+            var existingItem = Content.Find(i => i.ItemID == item.ItemID);
+
+            if (existingItem != null)
+            {
+                existingItem.Quantity += item.Quantity;
+                return true;
+            }
+
             if (CurrentWeight() + item.ItemWeight > WeightLimit)
             {
                 UnityEngine.Debug.LogWarning("Inventory is full");
@@ -92,6 +101,12 @@ namespace Domains.Items
         public virtual void SaveInventory()
         {
             throw new NotImplementedException();
+        }
+        public void EmptyInventory()
+        {
+            Content = new List<BaseItem>();
+
+            InventoryEvent.Trigger(InventoryEventType.ContentChanged, this);
         }
     }
 }

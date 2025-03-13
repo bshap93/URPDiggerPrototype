@@ -2,14 +2,13 @@
 
 using Core.Events;
 using Domains.Player.Events;
-using Domains.Player.Scripts;
 using Gameplay.Character;
 using Gameplay.Character.Stamina;
 using MoreMountains.Tools;
 using UnityEditor;
 using UnityEngine;
 
-namespace Gameplay.Player.Stats
+namespace Domains.Player.Scripts
 {
     public static class PlayerStaminaManagerDebug
     {
@@ -39,7 +38,7 @@ namespace Gameplay.Player.Stats
             if (characterStatProfile != null)
                 InitialCharacterStamina = characterStatProfile.InitialMaxStamina;
             else
-                Debug.LogError("CharacterStatProfile not set in PlayerStaminaManager");
+                UnityEngine.Debug.LogError("CharacterStatProfile not set in PlayerStaminaManager");
         }
 
 
@@ -49,7 +48,7 @@ namespace Gameplay.Player.Stats
 
             if (!ES3.FileExists(_savePath))
             {
-                Debug.Log("[PlayerStaminaManager] No save file found, forcing initial save...");
+                UnityEngine.Debug.Log("[PlayerStaminaManager] No save file found, forcing initial save...");
                 ResetPlayerStamina(); // Ensure default values are set
             }
 
@@ -59,10 +58,10 @@ namespace Gameplay.Player.Stats
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
             {
                 SavePlayerStamina();
-                Debug.Log("Manual Save Triggered!");
+                UnityEngine.Debug.Log("Manual Save Triggered!");
             }
         }
 
@@ -149,25 +148,26 @@ namespace Gameplay.Player.Stats
             var slotPath = ES3SlotManager.selectedSlotPath;
             var path = string.IsNullOrEmpty(slotPath) ? "PlayerStamina.es3" : $"{slotPath}/PlayerStamina.es3";
 
-            Debug.Log($"[PlayerStaminaManager] Save file path resolved to: {path}");
+            UnityEngine.Debug.Log($"[PlayerStaminaManager] Save file path resolved to: {path}");
             return path;
         }
 
         public void LoadPlayerStamina()
         {
             var saveFilePath = GetSaveFilePath();
-            Debug.Log($"[PlayerStaminaManager] Checking for saved stamina data at: {saveFilePath}");
+            UnityEngine.Debug.Log($"[PlayerStaminaManager] Checking for saved stamina data at: {saveFilePath}");
 
             if (ES3.FileExists(saveFilePath))
             {
                 StaminaPoints = ES3.Load<float>("StaminaPoints", saveFilePath);
                 MaxStaminaPoints = ES3.Load<float>("MaxStaminaPoints", saveFilePath);
                 staminaBarUpdater.Initialize();
-                Debug.Log($"✅ Loaded stamina data: StaminaPoints={StaminaPoints}, MaxStaminaPoints={MaxStaminaPoints}");
+                UnityEngine.Debug.Log(
+                    $"✅ Loaded stamina data: StaminaPoints={StaminaPoints}, MaxStaminaPoints={MaxStaminaPoints}");
             }
             else
             {
-                Debug.LogError($"❌ No saved stamina data found at {saveFilePath}");
+                UnityEngine.Debug.LogError($"❌ No saved stamina data found at {saveFilePath}");
                 ResetPlayerStamina();
                 staminaBarUpdater.Initialize();
             }
@@ -180,7 +180,7 @@ namespace Gameplay.Player.Stats
 
             if (characterStatProfile == null)
             {
-                Debug.LogError("\u274c CharacterStatProfile not found! Using default values.");
+                UnityEngine.Debug.LogError("\u274c CharacterStatProfile not found! Using default values.");
                 StaminaPoints = 100f;
                 MaxStaminaPoints = 100f;
             }
@@ -197,15 +197,14 @@ namespace Gameplay.Player.Stats
         public static void SavePlayerStamina()
         {
             var saveFilePath = GetSaveFilePath();
-            Debug.Log($"[PlayerStaminaManager] Attempting to save stamina to: {saveFilePath}");
 
             ES3.Save("StaminaPoints", StaminaPoints, saveFilePath);
             ES3.Save("MaxStaminaPoints", MaxStaminaPoints, saveFilePath);
 
             if (ES3.FileExists(saveFilePath))
-                Debug.Log($"✅ Successfully saved stamina data at {saveFilePath}");
+                UnityEngine.Debug.Log($"✅ Successfully saved stamina data at {saveFilePath}");
             else
-                Debug.LogError($"❌ Failed to save stamina data at {saveFilePath}");
+                UnityEngine.Debug.LogError($"❌ Failed to save stamina data at {saveFilePath}");
         }
         public bool HasSavedData()
         {

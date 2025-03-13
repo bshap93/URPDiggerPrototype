@@ -1,5 +1,5 @@
 using Domains.Player.Events;
-using Gameplay.Player.Stats;
+using Domains.Player.Scripts;
 using MoreMountains.Tools;
 using TMPro;
 using UnityEngine;
