@@ -76,6 +76,7 @@ namespace Domains.Mining.Scripts
 
         public override void UpdateBehaviour(float dt)
         {
+            PerformMining();
         }
     }
 }

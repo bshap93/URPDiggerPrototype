@@ -66,7 +66,7 @@ namespace Domains.Input.Scripts
 
         public static bool IsMineMouseButtonPressed()
         {
-            return UnityEngine.Input.GetMouseButtonDown(mineMouseButton);
+            return UnityEngine.Input.GetMouseButton(mineMouseButton);
         }
     }
 }
