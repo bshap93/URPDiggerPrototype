@@ -50,7 +50,8 @@ crashlytics-build.properties
 /[Pp]ackages/MicroSplat-CoreURP6/*
 /[Pp]ackages/com.jbooth.microsplat.urp6/*
 /[Pp]ackages/com.jbooth.microsplat.core/*
-
+/[Pp]ackages/com.jbooth.microsplat.digger/*
+/[Pp]ackages/com.jbooth.microsplat.triplanar/*
 
 # Visual Studio / MonoDevelop generated
 .vs/
