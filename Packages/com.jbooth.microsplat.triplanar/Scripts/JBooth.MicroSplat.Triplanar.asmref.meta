@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: bc2e29f41f1b24a45bccfe7736b8d42b
+AssemblyDefinitionReferenceImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 96777
+  packageName: MicroSplat - Triplanar UVs
+  packageVersion: 3.9.17
+  assetPath: Packages/com.jbooth.microsplat.triplanar/Scripts/JBooth.MicroSplat.Triplanar.asmref
+  uploadId: 490516

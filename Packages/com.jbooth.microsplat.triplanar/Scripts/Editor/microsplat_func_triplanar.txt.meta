@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c8abd52ec0647440faf311bdeab2d424
+timeCreated: 1500615152
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 96777
+  packageName: MicroSplat - Triplanar UVs
+  packageVersion: 3.9.17
+  assetPath: Packages/com.jbooth.microsplat.triplanar/Scripts/Editor/microsplat_func_triplanar.txt
+  uploadId: 490516

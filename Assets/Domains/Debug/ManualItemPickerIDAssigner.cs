@@ -25,7 +25,7 @@ namespace Domains.Debug
                 if (picker != null)
                 {
                     // Generate a unique ID using GUID
-                    picker.UniqueID = Guid.NewGuid().ToString();
+                    picker.uniqueID = Guid.NewGuid().ToString();
                     EditorUtility.SetDirty(picker); // Mark the object as dirty for saving
                 }
 

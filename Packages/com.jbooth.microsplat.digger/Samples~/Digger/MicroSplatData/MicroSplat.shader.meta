@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4347ad658431442f1a3e1d0bcea2646f
+timeCreated: 1580487850
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162840
+  packageName: MicroSplat - Digger Integration
+  packageVersion: 3.9.7
+  assetPath: Packages/com.jbooth.microsplat.digger/Samples~/Digger/MicroSplatData/MicroSplat.shader
+  uploadId: 469591

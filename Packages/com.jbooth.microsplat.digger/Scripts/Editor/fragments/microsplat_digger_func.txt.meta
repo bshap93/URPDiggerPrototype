@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 175753f923c5b4c2ca28225037c3da71
+timeCreated: 1580485972
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162840
+  packageName: MicroSplat - Digger Integration
+  packageVersion: 3.9.7
+  assetPath: Packages/com.jbooth.microsplat.digger/Scripts/Editor/fragments/microsplat_digger_func.txt
+  uploadId: 469591

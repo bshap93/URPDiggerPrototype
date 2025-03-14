@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a5a54a32982d14b36a0ff325992510d2
+timeCreated: 1580487866
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162840
+  packageName: MicroSplat - Digger Integration
+  packageVersion: 3.9.7
+  assetPath: Packages/com.jbooth.microsplat.digger/Samples~/Digger/MicroSplatData/MicroSplat_keywords.asset
+  uploadId: 469591

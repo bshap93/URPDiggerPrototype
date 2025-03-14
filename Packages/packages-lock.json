@@ -6,6 +6,22 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "com.jbooth.microsplat.digger": {
+      "version": "file:com.jbooth.microsplat.digger",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.jbooth.microsplat.core": "3.9.0"
+      }
+    },
+    "com.jbooth.microsplat.triplanar": {
+      "version": "file:com.jbooth.microsplat.triplanar",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.jbooth.microsplat.core": "3.9.0"
+      }
+    },
     "com.jbooth.microsplat.urp6": {
       "version": "file:com.jbooth.microsplat.urp6",
       "depth": 0,

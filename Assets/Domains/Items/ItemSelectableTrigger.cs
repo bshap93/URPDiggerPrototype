@@ -23,7 +23,7 @@ namespace Domains.Items
                 _itemPicker = gameObject.AddComponent<ItemPicker>();
 
             // TODO: Maybe this isn't working
-            _itemPicker.ItemType = Item;
+            _itemPicker.itemType = Item;
         }
 
         void OnTriggerEnter(Collider other)
