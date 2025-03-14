@@ -18,19 +18,19 @@ namespace Domains.Player.Scripts
         public Color defaultReticleColor = Color.white;
         public Color interactReticleColor = Color.green;
 
-        RuntimeDig _digClass;
-        DiggerMaster _diggerMaster;
-        DiggerMasterRuntime _diggerMasterRuntime;
-        bool _pickupPromptActive;
+        private RuntimeDig _digClass;
+        private DiggerMaster _diggerMaster;
+        private DiggerMasterRuntime _diggerMasterRuntime;
+        private bool _interactablePrompt;
 
-        void Start()
+        private void Start()
         {
             _diggerMaster = FindFirstObjectByType<DiggerMaster>();
             _diggerMasterRuntime = FindFirstObjectByType<DiggerMasterRuntime>();
             _digClass = GetComponent<RuntimeDig>();
         }
 
-        void Update()
+        private void Update()
         {
             PerformRaycastCheck(); // ✅ Single raycast for both interactables and diggable terrain
 
@@ -54,7 +54,7 @@ namespace Domains.Player.Scripts
             }
         }
 
-        void OnDrawGizmos()
+        private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(
@@ -63,7 +63,7 @@ namespace Domains.Player.Scripts
         }
 
 
-        void PerformRaycastCheck()
+        private void PerformRaycastCheck()
         {
             if (playerCamera == null)
             {
@@ -84,7 +84,7 @@ namespace Domains.Player.Scripts
                 if (interactable != null)
                 {
                     reticle.color = interactReticleColor;
-                    ShowPickupPrompt(hit.collider.gameObject);
+                    ShowInteractablePrompt(hit.collider.gameObject);
 
                     // ✅ Show button prompt if applicable
                     if (button != null) button.ShowPrompt();
@@ -94,31 +94,30 @@ namespace Domains.Player.Scripts
 
             // Reset if no interactable is found
             reticle.color = defaultReticleColor;
-            if (_pickupPromptActive)
+            if (_interactablePrompt)
                 HidePickupPrompt();
 
             HideAllPrompts(); // Hide button prompts if nothing is targeted
         }
 
-        void HideAllPrompts()
+        private void HideAllPrompts()
         {
             foreach (var button in FindObjectsOfType<ButtonActivated>()) button.HidePrompt();
         }
 
 
-        void ShowPickupPrompt(GameObject item)
+        private void ShowInteractablePrompt(GameObject item)
         {
-            _pickupPromptActive = true;
-            UnityEngine.Debug.Log($"Press E to pickup {item.name}");
+            _interactablePrompt = true;
         }
 
-        void HidePickupPrompt()
+        private void HidePickupPrompt()
         {
-            _pickupPromptActive = false;
+            _interactablePrompt = false;
             UnityEngine.Debug.Log(""); // Clear message
         }
 
-        void DetectTexture(RaycastHit hit)
+        private void DetectTexture(RaycastHit hit)
         {
             var index = TextureDetector.GetTextureIndex(hit, out var terrain);
             // if (terrain != null && index < terrain.terrainData.terrainLayers.Length)
@@ -127,7 +126,7 @@ namespace Domains.Player.Scripts
             //     Debug.Log("No texture detected or object is not a terrain.");
         }
 
-        void PerformInteraction()
+        private void PerformInteraction()
         {
             if (playerCamera == null)
             {

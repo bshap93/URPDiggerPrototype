@@ -1,7 +1,7 @@
 ﻿using System;
 using MoreMountains.Tools;
 
-namespace Core.Events
+namespace Domains.Player.Scripts
 {
     [Serializable]
     public enum PlayerStatusEventType
@@ -15,7 +15,7 @@ namespace Core.Events
 
     public struct PlayerStatusEvent
     {
-        static PlayerStatusEvent e;
+        private static PlayerStatusEvent e;
 
         public PlayerStatusEventType EventType;
 

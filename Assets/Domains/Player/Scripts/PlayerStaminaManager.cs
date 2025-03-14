@@ -1,7 +1,5 @@
-﻿using Core.Events;
-using Domains.Player.Events;
+﻿using Domains.Player.Events;
 using Domains.UI;
-using Gameplay.Character;
 using Gameplay.Character.Stamina;
 using MoreMountains.Tools;
 using UnityEditor;
@@ -12,7 +10,7 @@ namespace Domains.Player.Scripts
 #if UNITY_EDITOR
     public static class PlayerStaminaManagerDebug
     {
-        [MenuItem("Debug/Reset Stamina")]
+        [MenuItem("Debug/Reset/Reset Stamina")]
         public static void ResetStamina()
         {
             PlayerStaminaManager.ResetPlayerStamina();
@@ -146,10 +144,7 @@ namespace Domains.Player.Scripts
 
         private static string GetSaveFilePath()
         {
-            var slotPath = ES3SlotManager.selectedSlotPath;
-            var path = string.IsNullOrEmpty(slotPath) ? "PlayerStamina.es3" : $"{slotPath}/PlayerStamina.es3";
-
-            return path;
+            return "GameSave.es3"; // Always use the same file
         }
 
         public void LoadPlayerStamina()
@@ -197,13 +192,8 @@ namespace Domains.Player.Scripts
         {
             var saveFilePath = GetSaveFilePath();
 
-            ES3.Save("StaminaPoints", StaminaPoints, saveFilePath);
-            ES3.Save("MaxStaminaPoints", MaxStaminaPoints, saveFilePath);
-
-            if (ES3.FileExists(saveFilePath))
-                UnityEngine.Debug.Log($"✅ Successfully saved stamina data at {saveFilePath}");
-            else
-                UnityEngine.Debug.LogError($"❌ Failed to save stamina data at {saveFilePath}");
+            ES3.Save("StaminaPoints", StaminaPoints, "GameSave.es3");
+            ES3.Save("MaxStaminaPoints", MaxStaminaPoints, "GameSave.es3");
         }
 
         public bool HasSavedData()

@@ -1,4 +1,4 @@
-﻿namespace Gameplay.Character
+﻿namespace Domains.Player.Scripts
 {
     public static class CharacterResourcePaths
     {

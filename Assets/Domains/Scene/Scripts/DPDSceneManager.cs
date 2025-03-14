@@ -1,6 +1,6 @@
-﻿using Domains.Input.Scripts;
-using Lightbug.CharacterControllerPro.Core;
+﻿using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Demo;
+using ThirdParty.Character_Controller_Pro.Demo.Scripts.Camera;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,41 +8,39 @@ namespace Domains.Scene.Scripts
 {
     public class DpdSceneManager : MonoBehaviour
     {
-        [Header("Character")] [SerializeField] CharacterActor characterActor;
-
+        [Header("Character")] [SerializeField] private CharacterActor characterActor;
 
         [Header("Scene references")] [SerializeField]
-        CharacterReferenceObject[] references;
+        private CharacterReferenceObject[] references;
 
 
-        [SerializeField] bool hideAndConfineCursor = true;
+        [SerializeField] private bool hideAndConfineCursor = true;
 
-        [Header("Graphics")] [SerializeField] GameObject graphicsObject;
+        [Header("Graphics")] [SerializeField] private GameObject graphicsObject;
 
-        [Header("Camera")] [SerializeField]
+        [FormerlySerializedAs("camera")] [Header("Camera")] [SerializeField]
 #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
-        Camera3D camera;
+        private Camera3D myCamera;
 #pragma warning restore CS0108 // Member hides inherited member; missing new keyword
 
         [FormerlySerializedAs("frameRateText")] [SerializeField]
 
         // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-        Renderer[] graphicsRenderers;
-        readonly Renderer[] capsuleRenderers = null;
+        private Renderer[] graphicsRenderers;
 
-        [Header("UI")] bool isPaused;
+        private readonly Renderer[] capsuleRenderers = null;
 
-        NormalMovement normalMovement;
+        private NormalMovement normalMovement;
 
-        void Awake()
+        private void Awake()
         {
             if (characterActor != null)
                 normalMovement = characterActor.GetComponentInChildren<NormalMovement>();
 
             // Set the looking direction mode
-            if (normalMovement != null && camera != null)
+            if (normalMovement != null && myCamera != null)
             {
-                if (camera.cameraMode == Camera3D.CameraMode.FirstPerson)
+                if (myCamera.cameraMode == Camera3D.CameraMode.FirstPerson)
                     normalMovement.lookingDirectionParameters.lookingDirectionMode =
                         LookingDirectionParameters.LookingDirectionMode.ExternalReference;
                 else
@@ -58,44 +56,8 @@ namespace Domains.Scene.Scripts
             Cursor.lockState = hideAndConfineCursor ? CursorLockMode.Locked : CursorLockMode.None;
         }
 
-        void Update()
-        {
-            var pressedKey = CustomInputBindings.GetPressedNumberKey();
 
-            if (CustomInputBindings.IsCancelPressed()) TogglePause();
-
-
-            if (pressedKey != -1 && pressedKey < references.Length && references[pressedKey] != null)
-                GoTo(references[pressedKey]);
-
-
-            if (CustomInputBindings.IsChangePerspectivePressed())
-                // If the Camera3D is present, change between First person and Third person mode.
-                if (camera != null)
-                {
-                    camera.ToggleCameraMode();
-
-                    if (normalMovement != null)
-                    {
-                        if (camera.cameraMode == Camera3D.CameraMode.FirstPerson)
-                            normalMovement.lookingDirectionParameters.lookingDirectionMode =
-                                LookingDirectionParameters.LookingDirectionMode.ExternalReference;
-                        else
-                            normalMovement.lookingDirectionParameters.lookingDirectionMode =
-                                LookingDirectionParameters.LookingDirectionMode.Movement;
-                    }
-                }
-        }
-
-        void TogglePause()
-        {
-            isPaused = !isPaused;
-            Time.timeScale = isPaused ? 0f : 1f;
-            Cursor.visible = isPaused;
-            Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-        }
-
-        float GetRefreshRateValue()
+        private float GetRefreshRateValue()
         {
 #if UNITY_2022_2_OR_NEWER
             return (float)Screen.currentResolution.refreshRateRatio.value;
@@ -105,7 +67,7 @@ namespace Domains.Scene.Scripts
         }
 
 
-        void HandleVisualObjects(bool showCapsule)
+        private void HandleVisualObjects(bool showCapsule)
         {
             if (capsuleRenderers != null)
                 for (var i = 0; i < capsuleRenderers.Length; i++)
@@ -122,7 +84,7 @@ namespace Domains.Scene.Scripts
                 }
         }
 
-        void GoTo(CharacterReferenceObject reference)
+        private void GoTo(CharacterReferenceObject reference)
         {
             if (reference == null)
                 return;

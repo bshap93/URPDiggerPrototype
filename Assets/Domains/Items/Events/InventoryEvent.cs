@@ -10,7 +10,7 @@ namespace Domains.Items.Events
 
     public struct InventoryEvent
     {
-        public static InventoryEvent _e;
+        public static InventoryEvent E;
 
         public InventoryEventType EventType;
 
@@ -18,10 +18,10 @@ namespace Domains.Items.Events
 
         public static void Trigger(InventoryEventType eventType, Inventory inventory)
         {
-            _e.EventType = eventType;
-            _e.Inventory = inventory;
+            E.EventType = eventType;
+            E.Inventory = inventory;
 
-            MMEventManager.TriggerEvent(_e);
+            MMEventManager.TriggerEvent(E);
         }
     }
 }

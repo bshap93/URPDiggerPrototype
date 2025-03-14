@@ -45,6 +45,8 @@ crashlytics-build.properties
 /[Aa]ssets/ThirdParty/
 /[Aa]ssets/Digger/*
 /[Aa]ssets/TutorialInfo/*
+/[Aa]ssets/ThirdParty/Modern UI Pack/*
+/[Aa]ssets/ThirdParty/PolygonSciFiWorlds/*
 
 /[Pp]ackages/MicroSplat-Core/*
 /[Pp]ackages/MicroSplat-CoreURP6/*
@@ -52,6 +54,7 @@ crashlytics-build.properties
 /[Pp]ackages/com.jbooth.microsplat.core/*
 /[Pp]ackages/com.jbooth.microsplat.digger/*
 /[Pp]ackages/com.jbooth.microsplat.triplanar/*
+
 
 # Visual Studio / MonoDevelop generated
 .vs/

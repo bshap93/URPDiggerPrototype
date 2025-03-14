@@ -1,16 +1,17 @@
 using System;
 using Domains.Player.Scripts;
-using Gameplay.Player.Stats;
+using Domains.SaveLoad;
+using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Domains.Scene.Scripts
 {
     [Serializable]
-    public class SaveManager : MonoBehaviour
+    public class SaveManager : MonoBehaviour, MMEventListener<SaveLoadEvent>
     {
-        const string SaveFilePrefix = "GameSave_";
-        const string SaveFileExtension = ".es3";
+        private const string SaveFilePrefix = "GameSave";
+        private const string SaveFileExtension = ".es3";
 
         // [Header("Persistence Managers")] [SerializeField]
         // InventoryPersistenceManager inventoryManager;
@@ -18,17 +19,20 @@ namespace Domains.Scene.Scripts
         [FormerlySerializedAs("playerStatsManager")]
         [FormerlySerializedAs("resourcesManager")]
         [SerializeField]
-        PlayerStaminaManager playerStaminaManager;
-        [SerializeField] PlayerHealthManager playerHealthManager;
+        private PlayerStaminaManager playerStaminaManager;
+
+        [SerializeField] private PlayerHealthManager playerHealthManager;
 
         [Header("Item & Container Persistence")]
         public PickableManager pickableManager;
+
+        public PlayerInventoryManager playerInventoryManager;
 
         public int currentSlot;
 
         public static SaveManager Instance { get; private set; }
 
-        void Awake()
+        private void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -66,27 +70,36 @@ namespace Domains.Scene.Scripts
             }
         }
 
-        void Update()
+
+        private void OnEnable()
         {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
-            {
-                PlayerHealthManager.SavePlayerHealth();
-                PlayerStaminaManager.SavePlayerStamina();
-                UnityEngine.Debug.Log("Manual Save Triggered!");
-            }
+            this.MMEventStartListening();
+        }
+
+        private void OnDisable()
+        {
+            this.MMEventStopListening();
+        }
+
+        public void OnMMEvent(SaveLoadEvent eventType)
+        {
+            if (eventType.EventType == SaveLoadEventType.Save)
+                SaveAll();
+            else if (eventType.EventType == SaveLoadEventType.Load) LoadAll();
         }
 
 
-        string GetSaveFileName(int slot)
+        private string GetSaveFileName()
         {
-            return $"{SaveFilePrefix}{slot}{SaveFileExtension}";
+            return "GameSave.es3"; // Always use a single save file
         }
 
         public void SaveAll()
         {
-            // inventoryManager?.SaveInventory();
             PlayerStaminaManager.SavePlayerStamina();
             PlayerHealthManager.SavePlayerHealth();
+            playerInventoryManager?.SaveInventory();
+            PlayerCurrencyManager.SavePlayerCurrency();
             UnityEngine.Debug.Log($"Save Path: {Application.persistentDataPath}");
         }
 

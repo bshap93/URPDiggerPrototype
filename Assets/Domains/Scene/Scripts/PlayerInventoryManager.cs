@@ -11,7 +11,7 @@ namespace Domains.Scene.Scripts
 #if UNITY_EDITOR
     public static class InventoryPersistenceManagerDebug
     {
-        [MenuItem("Debug/Reset Inventory")]
+        [MenuItem("Debug/Reset/Reset Inventory")]
         public static void ResetInventory()
         {
             PlayerInventoryManager.ResetInventory();
@@ -21,12 +21,12 @@ namespace Domains.Scene.Scripts
 
     public class PlayerInventoryManager : MonoBehaviour
     {
-        const string INVENTORY_KEY = "InventoryContent";
-        const string RESOURCES_PATH = "Items";
+        private const string INVENTORY_KEY = "InventoryContent";
+        private const string RESOURCES_PATH = "Items";
         public Inventory playerInventory;
 
 
-        static string GetSaveFilePath()
+        private static string GetSaveFilePath()
         {
             var slotPath = ES3SlotManager.selectedSlotPath;
             var path = string.IsNullOrEmpty(slotPath) ? "PlayerInventory.es3" : $"{slotPath}/PlayerStamina.es3";
@@ -52,10 +52,12 @@ namespace Domains.Scene.Scripts
             ES3.Save(INVENTORY_KEY, inventoryData, saveFilePath);
             UnityEngine.Debug.Log($"✅ Inventory saved at {saveFilePath}");
         }
+
         public bool HasSavedData()
         {
             return ES3.FileExists(GetSaveFilePath());
         }
+
         public void LoadInventory()
         {
             var saveFilePath = GetSaveFilePath();
@@ -90,7 +92,7 @@ namespace Domains.Scene.Scripts
             ES3.Save(INVENTORY_KEY, new List<BaseItem>(), GetSaveFilePath());
         }
 
-        static void RestoreInventory(Inventory inventory, List<InventoryEntryData> inventoryContentData)
+        private static void RestoreInventory(Inventory inventory, List<InventoryEntryData> inventoryContentData)
         {
             foreach (var itemData in inventoryContentData)
             {
@@ -103,7 +105,7 @@ namespace Domains.Scene.Scripts
             }
         }
 
-        static BaseItem GetItemByID(string itemID)
+        private static BaseItem GetItemByID(string itemID)
         {
             return Resources.LoadAll<BaseItem>(RESOURCES_PATH).FirstOrDefault(i => i.ItemID == itemID);
         }
@@ -113,6 +115,7 @@ namespace Domains.Scene.Scripts
         {
             public string UniqueID;
             public string ItemID;
+
             public InventoryEntryData(string itemUniqueID, string baseItemItemID)
             {
                 UniqueID = itemUniqueID;

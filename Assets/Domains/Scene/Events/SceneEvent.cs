@@ -4,12 +4,14 @@ namespace Domains.Scene.Events
 {
     public enum SceneEventType
     {
-        SceneLoaded
+        SceneLoaded,
+        PauseScene,
+        ResumeScene
     }
 
     public struct SceneEvent
     {
-        static SceneEvent _e;
+        private static SceneEvent _e;
 
         public SceneEventType EventType;
 

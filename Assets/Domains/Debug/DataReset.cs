@@ -1,16 +1,16 @@
 using Domains.Player.Scripts;
-using Gameplay.Player.Stats;
 using UnityEngine;
 
 namespace Gameplay.Config
 {
     public class DataReset : MonoBehaviour
     {
-        void Awake()
+        private void Awake()
         {
             Debug.Log("PurePrototypeReset: Awake() called.");
             ClearAllSaveData();
         }
+
         public static void ClearAllSaveData()
         {
             // Reset Pickables

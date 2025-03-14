@@ -1,9 +1,5 @@
-using System;
-using Core.Events;
 using Domains.Player.Events;
-using Domains.Scene.Events;
 using Domains.UI;
-using Gameplay.Character;
 using MoreMountains.Tools;
 using UnityEditor;
 using UnityEngine;
@@ -13,7 +9,7 @@ namespace Domains.Player.Scripts
 #if UNITY_EDITOR
     public static class PlayerHealthManagerDebug
     {
-        [MenuItem("Debug/Reset Health")]
+        [MenuItem("Debug/Reset/Reset Health")]
         public static void ResetHealth()
         {
             PlayerHealthManager.ResetPlayerHealth();
@@ -21,7 +17,7 @@ namespace Domains.Player.Scripts
     }
 #endif
 
-    public class PlayerHealthManager : MonoBehaviour, MMEventListener<SceneEvent>
+    public class PlayerHealthManager : MonoBehaviour, MMEventListener<HealthEvent>
     {
         public static float HealthPoints;
         public static float MaxHealthPoints;
@@ -33,9 +29,9 @@ namespace Domains.Player.Scripts
 
         public bool immuneToDamage;
 
-        string _savePath;
+        private string _savePath;
 
-        void Awake()
+        private void Awake()
         {
             if (characterStatProfile != null)
                 InitialCharacterHealth = characterStatProfile.InitialMaxHealth;
@@ -43,31 +39,53 @@ namespace Domains.Player.Scripts
                 UnityEngine.Debug.LogError("CharacterStatProfile not set in PlayerHealthManager");
         }
 
-        void Start()
+        private void Start()
         {
             _savePath = GetSaveFilePath();
+
+            if (!ES3.FileExists(_savePath))
+            {
+                UnityEngine.Debug.Log("[PlayerHealthManager] No save file found, forcing initial save...");
+                ResetPlayerHealth(); // Ensure default values are set
+            }
 
             LoadPlayerHealth();
         }
 
-        void OnEnable()
+        private void Update()
         {
-            this.MMEventStartListening();
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
+            {
+                SavePlayerHealth();
+                UnityEngine.Debug.Log("Player health saved");
+            }
         }
 
-        void OnDisable()
+        public void OnMMEvent(HealthEvent eventType)
         {
-            this.MMEventStopListening();
-        }
-        public void OnMMEvent(SceneEvent eventType)
-        {
-            throw new NotImplementedException();
+            switch (eventType.EventType)
+            {
+                case HealthEventType.ConsumeHealth:
+                    ConsumeHealth(eventType.ByValue);
+                    break;
+                case HealthEventType.RecoverHealth:
+                    RecoverHealth(eventType.ByValue);
+                    break;
+                case HealthEventType.IncreaseMaximumHealth:
+                    IncreaseMaximumHealth(eventType.ByValue);
+                    break;
+                case HealthEventType.DecreaseMaximumHealth:
+                    DecreaseMaximumHealth(eventType.ByValue);
+                    break;
+                default:
+                    UnityEngine.Debug.LogWarning($"Unknown HealthEventType: {eventType.EventType}");
+                    break;
+            }
         }
 
 
         public void Initialize()
         {
-            UnityEngine.Debug.Log("Initializing player health");
             ResetPlayerHealth();
             healthBarUpdater.Initialize();
         }
@@ -87,7 +105,7 @@ namespace Domains.Player.Scripts
                 HealthEvent.Trigger(HealthEventType.ConsumeHealth, healthToConsume);
             }
 
-            SavePlayerHealth();
+            // SavePlayerHealth();
         }
 
         public static void RecoverHealth(float amount)
@@ -95,7 +113,6 @@ namespace Domains.Player.Scripts
             if (HealthPoints == 0 && amount > 0) PlayerStatusEvent.Trigger(PlayerStatusEventType.RegainedHealth);
             HealthPoints += amount;
             HealthEvent.Trigger(HealthEventType.RecoverHealth, amount);
-            SavePlayerHealth();
         }
 
         public static void FullyRecoverHealth()
@@ -103,28 +120,24 @@ namespace Domains.Player.Scripts
             HealthPoints = MaxHealthPoints;
             PlayerStatusEvent.Trigger(PlayerStatusEventType.RegainedHealth);
             HealthEvent.Trigger(HealthEventType.RecoverHealth, MaxHealthPoints - HealthPoints);
-            SavePlayerHealth();
         }
 
         public static void IncreaseMaximumHealth(float amount)
         {
             MaxHealthPoints += amount;
             HealthEvent.Trigger(HealthEventType.IncreaseMaximumHealth, amount);
-            SavePlayerHealth();
         }
 
         public static void DecreaseMaximumHealth(float amount)
         {
             MaxHealthPoints -= amount;
             HealthEvent.Trigger(HealthEventType.DecreaseMaximumHealth, amount);
-            SavePlayerHealth();
         }
 
 
-        static string GetSaveFilePath()
+        private static string GetSaveFilePath()
         {
-            var slotPath = ES3SlotManager.selectedSlotPath;
-            return string.IsNullOrEmpty(slotPath) ? "PlayerHealth.es3" : $"{slotPath}/PlayerHealth.es3";
+            return "GameSave.es3"; // Single save file for everything
         }
 
         public void LoadPlayerHealth()
@@ -144,6 +157,7 @@ namespace Domains.Player.Scripts
                 healthBarUpdater.Initialize();
             }
         }
+
         public static void ResetPlayerHealth()
         {
             var characterStatProfile =
@@ -168,7 +182,6 @@ namespace Domains.Player.Scripts
         public static void SavePlayerHealth()
         {
             var saveFilePath = GetSaveFilePath();
-            UnityEngine.Debug.Log($"Saving player health to: {saveFilePath}");
 
             ES3.Save("HealthPoints", HealthPoints, saveFilePath);
             ES3.Save("MaxHealthPoints", MaxHealthPoints, saveFilePath);

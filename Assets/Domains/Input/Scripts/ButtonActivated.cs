@@ -1,4 +1,5 @@
 ﻿using Domains.Mining.Scripts;
+using Domains.SaveLoad;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 using UnityEngine.Events;
@@ -51,6 +52,12 @@ namespace Domains.Input.Scripts
         public void HidePrompt()
         {
             if (_buttonPrompt != null) _buttonPrompt.Hide();
+        }
+
+        public void TriggerSave()
+        {
+            UnityEngine.Debug.Log("Triggering save");
+            SaveLoadEvent.Trigger(SaveLoadEventType.Save);
         }
     }
 }

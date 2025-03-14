@@ -12,7 +12,6 @@ namespace Domains.Input.Scripts
         private static readonly KeyCode changePerspectiveKey = KeyCode.V;
         private static readonly KeyCode persistanceKey = KeyCode.P;
         private static readonly KeyCode deletionKey = KeyCode.Alpha0;
-        private static readonly KeyCode cancelKey = KeyCode.Escape;
         private static readonly int mineMouseButton = 0;
 
         // Methods to check input (abstraction layer)
@@ -57,10 +56,6 @@ namespace Domains.Input.Scripts
             return -1; // No number key was pressed
         }
 
-        public static bool IsCancelPressed()
-        {
-            return UnityEngine.Input.GetKeyDown(cancelKey);
-        }
 
         public static bool IsMineMouseButtonPressed()
         {
