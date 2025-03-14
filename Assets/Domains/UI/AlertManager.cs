@@ -1,19 +1,23 @@
 using System;
 using UnityEngine;
 
-public class AlertManager : MonoBehaviour
+namespace Domains.UI
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class AlertManager : MonoBehaviour
     {
-    }
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        private void Start()
+        {
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-    public static void ShowAlert(string staminaDepleted)
-    {
-        throw new System.NotImplementedException();
+        // Update is called once per frame
+        private void Update()
+        {
+        }
+
+        public static void ShowAlert(string staminaDepleted)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

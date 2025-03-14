@@ -1,17 +1,25 @@
 using Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
 using Domains.Input.Scripts;
+using Domains.Player.Events;
+using Domains.Player.Scripts;
 using Lightbug.CharacterControllerPro.Implementation;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 
 namespace Domains.Mining.Scripts
 {
     public class MiningState : CharacterState
     {
-        static readonly int SwingMiningTool = Animator.StringToHash("SwingMiningTool");
-        [SerializeField] float miningRange = 5f;
+        private static readonly int SwingMiningTool = Animator.StringToHash("SwingMiningTool");
+        [SerializeField] private float miningRange = 5f;
         public Animator toolAnimator;
         public Transform cameraTransform;
+
+        public float staminaExpense = 2f;
+
+        public MMFeedbacks miningFeedbacks;
+        public MMFeedbacks cannotMineFeedbacks;
 
         // Digger parameters
         public float size;
@@ -21,7 +29,7 @@ namespace Domains.Mining.Scripts
         public int textureIndex;
 
         public bool editAsynchronously = true;
-        DiggerMasterRuntime _diggerMasterRuntime;
+        private DiggerMasterRuntime _diggerMasterRuntime;
 
 
         protected override void Start()
@@ -36,14 +44,18 @@ namespace Domains.Mining.Scripts
                 enabled = false;
             }
         }
+
         // Write your transitions here
         public override bool CheckEnterTransition(CharacterState fromState)
         {
-            if (toolAnimator != null) toolAnimator.SetBool(SwingMiningTool, true);
-            return PerformMining();
+            // if (toolAnimator != null) toolAnimator.SetBool(SwingMiningTool, true);
+            if (!PlayerStaminaManager.IsPlayerOutOfStamina()) return PerformMining();
+
+            cannotMineFeedbacks?.PlayFeedbacks();
+            return false;
         }
 
-        bool PerformMining()
+        private bool PerformMining()
         {
             RaycastHit hit;
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, miningRange))
@@ -57,6 +69,9 @@ namespace Domains.Mining.Scripts
                 else
                     _diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
 
+                miningFeedbacks?.PlayFeedbacks();
+
+                StaminaEvent.Trigger(StaminaEventType.ConsumeStamina, staminaExpense);
                 return true;
             }
 

@@ -1,5 +1,6 @@
 ﻿using Core.Events;
 using Domains.Player.Events;
+using Domains.UI;
 using Gameplay.Character;
 using Gameplay.Character.Stamina;
 using MoreMountains.Tools;
@@ -22,6 +23,7 @@ namespace Domains.Player.Scripts
     {
         public static float StaminaPoints;
         public static float MaxStaminaPoints;
+
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static float InitialCharacterStamina;
@@ -29,10 +31,10 @@ namespace Domains.Player.Scripts
         public CharacterStatProfile characterStatProfile;
 
 
-        string _savePath;
+        private string _savePath;
 
 
-        void Awake()
+        private void Awake()
         {
             if (characterStatProfile != null)
                 InitialCharacterStamina = characterStatProfile.InitialMaxStamina;
@@ -41,7 +43,7 @@ namespace Domains.Player.Scripts
         }
 
 
-        void Start()
+        private void Start()
         {
             _savePath = GetSaveFilePath();
 
@@ -55,7 +57,7 @@ namespace Domains.Player.Scripts
         }
 
 
-        void Update()
+        private void Update()
         {
             if (UnityEngine.Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
             {
@@ -64,12 +66,12 @@ namespace Domains.Player.Scripts
             }
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             this.MMEventStartListening();
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             this.MMEventStopListening();
         }
@@ -112,7 +114,7 @@ namespace Domains.Player.Scripts
                 StaminaPoints -= amount;
             }
 
-            SavePlayerStamina();
+            // SavePlayerStamina();
         }
 
         public static void RecoverStamina(float amount)
@@ -142,7 +144,7 @@ namespace Domains.Player.Scripts
             SavePlayerStamina();
         }
 
-        static string GetSaveFilePath()
+        private static string GetSaveFilePath()
         {
             var slotPath = ES3SlotManager.selectedSlotPath;
             var path = string.IsNullOrEmpty(slotPath) ? "PlayerStamina.es3" : $"{slotPath}/PlayerStamina.es3";
@@ -203,10 +205,12 @@ namespace Domains.Player.Scripts
             else
                 UnityEngine.Debug.LogError($"❌ Failed to save stamina data at {saveFilePath}");
         }
+
         public bool HasSavedData()
         {
             return ES3.FileExists(GetSaveFilePath());
         }
+
         public static bool IsPlayerOutOfStamina()
         {
             return StaminaPoints <= 0;

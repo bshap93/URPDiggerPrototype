@@ -1,4 +1,5 @@
 ﻿using Domains.Mining.Scripts;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,9 +12,11 @@ namespace Domains.Input.Scripts
 
         public Vector3 promptTransformOffset;
         public Vector3 promptRotationOffset;
-        ButtonPrompt _buttonPrompt;
 
-        void Start()
+        public MMFeedbacks activationFeedback;
+        private ButtonPrompt _buttonPrompt;
+
+        private void Start()
         {
             if (ButtonPromptPrefab != null)
             {
@@ -30,11 +33,12 @@ namespace Domains.Input.Scripts
             ActivateButton();
         }
 
-        void ActivateButton()
+        private void ActivateButton()
         {
             if (OnActivation != null)
             {
                 OnActivation.Invoke();
+                activationFeedback?.PlayFeedbacks();
                 UnityEngine.Debug.Log("Button Activated!");
             }
         }
