@@ -5,34 +5,33 @@ namespace Domains.Input.Scripts
     public class CustomInputBindings
     {
         // Define keybindings in one place
-        static readonly KeyCode interactKey = KeyCode.E;
-        static readonly KeyCode jumpKey = KeyCode.Space;
-        static readonly KeyCode crouchKey = KeyCode.LeftControl;
-        static readonly KeyCode runKey = KeyCode.LeftShift;
-        static KeyCode alpha1Key = KeyCode.Alpha1;
-        static readonly KeyCode changePerspectiveKey = KeyCode.V;
-        static readonly KeyCode persistanceKey = KeyCode.P;
-        static readonly KeyCode deletionKey = KeyCode.Alpha0;
-        static readonly KeyCode cancelKey = KeyCode.Escape;
-        static readonly int mineMouseButton = 0;
+        private static readonly KeyCode interactKey = KeyCode.E;
+        private static readonly KeyCode crouchKey = KeyCode.LeftControl;
+        private static readonly KeyCode runKey = KeyCode.LeftShift;
+        private static KeyCode alpha1Key = KeyCode.Alpha1;
+        private static readonly KeyCode changePerspectiveKey = KeyCode.V;
+        private static readonly KeyCode persistanceKey = KeyCode.P;
+        private static readonly KeyCode deletionKey = KeyCode.Alpha0;
+        private static readonly KeyCode cancelKey = KeyCode.Escape;
+        private static readonly int mineMouseButton = 0;
 
         // Methods to check input (abstraction layer)
         public static bool IsInteractPressed()
         {
             return UnityEngine.Input.GetKeyDown(interactKey);
         }
-        public static bool IsJumpPressed()
-        {
-            return UnityEngine.Input.GetKeyDown(jumpKey);
-        }
+
+
         public static bool IsCrouchPressed()
         {
             return UnityEngine.Input.GetKey(crouchKey);
         }
+
         public static bool IsRunHeld()
         {
             return UnityEngine.Input.GetKey(runKey);
         }
+
         public static bool IsChangePerspectivePressed()
         {
             return UnityEngine.Input.GetKeyDown(changePerspectiveKey);

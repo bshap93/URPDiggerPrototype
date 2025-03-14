@@ -81,6 +81,12 @@ namespace Domains.Mining.Scripts
         // Write your transitions here
         public override void CheckExitTransition()
         {
+            if (PlayerStaminaManager.IsPlayerOutOfStamina())
+            {
+                cannotMineFeedbacks?.PlayFeedbacks();
+                CharacterStateController.EnqueueTransition<MyNormalMovement>();
+            }
+
             if (!CustomInputBindings.IsMineMouseButtonPressed())
             {
                 UnityEngine.Debug.Log("Mining State will be exited");

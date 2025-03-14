@@ -1,13 +1,16 @@
 ﻿using System;
 using Domains.Input.Scripts;
+using Domains.Player.Events;
 using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Demo;
 using Lightbug.CharacterControllerPro.Implementation;
-using Lightbug.Utilities;
+using MoreMountains.Tools;
+using ThirdParty.Character_Controller_Pro.Utilities.Scripts;
 using UnityEngine;
 
 namespace Domains.Mining.Scripts
 {
+    [MMRequiresConstantRepaint]
     [AddComponentMenu("Character Controller Pro/Demo/Character/States/Normal Movement")]
     public class MyNormalMovement : CharacterState
     {
@@ -41,20 +44,37 @@ namespace Domains.Mining.Scripts
 
         [SerializeField] protected string heightParameter = "Height";
 
+        [Header("Jet Pack")] [SerializeField] protected float jetPackDuration = 0.1f;
+
+        [SerializeField] protected float jetPackSpeedMultiplier = 3f;
+
+        // Add these new fields for fall damage
+        [Header("Fall Damage")] [SerializeField]
+        protected bool enableFallDamage = true;
+
+        [SerializeField] protected float minimumFallDamageSpeed = 10f;
+        [SerializeField] protected float fallDamageMultiplier = 1f;
+
+
         protected PlanarMovementParameters.PlanarMovementProperties currentMotion;
         protected float currentPlanarSpeedLimit;
 
         protected bool groundedJumpAvailable;
         protected bool isAllowedToCancelJump;
         protected bool isCrouched;
+        protected bool isFalling;
         protected Vector3 jumpDirection;
 
 
         protected MaterialController materialController;
+
+        // Track the maximum fall velocity for damage calculation
+        protected float maxFallSpeed;
         protected int notGroundedJumpsLeft;
-        bool reducedAirControlFlag;
-        float reducedAirControlInitialTime;
-        float reductionDuration = 0.5f;
+        private bool reducedAirControlFlag;
+        private float reducedAirControlInitialTime;
+        private float reductionDuration = 0.5f;
+        protected Vector3 smoothDampVelocity = Vector3.zero;
         protected float targetHeight = 1f;
 
         protected Vector3 targetLookingDirection;
@@ -119,10 +139,14 @@ namespace Domains.Mining.Scripts
                 "in a typical game, from a 3D platformer to a first person walking simulator.";
         }
 
-        void OnTeleport(Vector3 position, Quaternion rotation)
+        private void OnTeleport(Vector3 position, Quaternion rotation)
         {
             targetLookingDirection = CharacterActor.Forward;
             isAllowedToCancelJump = false;
+
+            // Reset fall tracking when teleporting
+            isFalling = false;
+            maxFallSpeed = 0f;
         }
 
         public override void CheckExitTransition()
@@ -150,7 +174,7 @@ namespace Domains.Mining.Scripts
             this.reductionDuration = reductionDuration;
         }
 
-        void SetMotionValues(Vector3 targetPlanarVelocity)
+        private void SetMotionValues(Vector3 targetPlanarVelocity)
         {
             var angleCurrentTargetVelocity = Vector3.Angle(CharacterActor.PlanarVelocity, targetPlanarVelocity);
 
@@ -342,7 +366,7 @@ namespace Domains.Mining.Scripts
                 CharacterActor.VerticalVelocity += CustomUtilities.Multiply(-CharacterActor.Up, gravity, dt);
         }
 
-        JumpResult CanJump()
+        private JumpResult CanJump()
         {
             var jumpResult = JumpResult.Invalid;
 
@@ -393,19 +417,84 @@ namespace Domains.Mining.Scripts
             ProcessJumpDown(dt);
         }
 
-
-        void ProcessVerticalMovement(float dt)
+        protected virtual void ProcessJetPack(float dt)
         {
+            if (CharacterActions.jetPack.value)
+                CharacterActor.VerticalVelocity = Vector3.SmoothDamp(
+                    CharacterActor.VerticalVelocity,
+                    targetHeight * CharacterActor.Up,
+                    ref smoothDampVelocity,
+                    jetPackDuration
+                ) * jetPackSpeedMultiplier;
+
+            // CharacterActor.PlanarVelocity = Vector3.Lerp(CharacterActor.PlanarVelocity,
+            //     planarMovementParameters.targetPlanarSpeed * CharacterStateController.InputMovementReference, 7f * dt);
+
+            CharacterActor.SetYaw(CharacterActor.PlanarVelocity);
+        }
+
+
+        private void ProcessVerticalMovement(float dt)
+        {
+            // Track falling state and maximum fall speed
+            if (enableFallDamage)
+            {
+                // If we're falling (negative vertical velocity in the up direction)
+                var currentFallSpeed = -Vector3.Dot(CharacterActor.Velocity, CharacterActor.Up);
+
+                if (currentFallSpeed > 0 && !CharacterActor.IsGrounded)
+                {
+                    isFalling = true;
+                    // Track the maximum fall speed during this fall
+                    maxFallSpeed = Mathf.Max(maxFallSpeed, currentFallSpeed);
+                }
+
+                // Check for landing impact
+                if (isFalling && CharacterActor.IsGrounded)
+                {
+                    HandleFallDamage();
+                    // Reset fall tracking
+                    isFalling = false;
+                    maxFallSpeed = 0f;
+                }
+            }
+
             ProcessGravity(dt);
             ProcessJump(dt);
+            ProcessJetPack(dt);
+        }
+
+        // New method to handle fall damage
+        protected virtual void HandleFallDamage()
+        {
+            if (!enableFallDamage)
+                return;
+
+            // If fall speed exceeds the threshold, apply damage
+            if (maxFallSpeed > minimumFallDamageSpeed)
+            {
+                // Calculate damage - simple linear model based on speed beyond the threshold
+                var excessSpeed = maxFallSpeed - minimumFallDamageSpeed;
+                var damage = excessSpeed * fallDamageMultiplier;
+
+                // Call the damage event
+                UnityEngine.Debug.Log("Fall damage applied: " + damage);
+                HealthEvent.Trigger(HealthEventType.ConsumeHealth, damage);
+
+                // Optional: Debug output
+                UnityEngine.Debug.Log($"Fall damage applied: {damage} from fall speed: {maxFallSpeed}");
+            }
         }
 
 
         public override void EnterBehaviour(float dt, CharacterState fromState)
         {
             targetLookingDirection = CharacterActor.Forward;
-
             CharacterActor.alwaysNotGrounded = false;
+
+            // Reset fall tracking
+            isFalling = false;
+            maxFallSpeed = 0f;
 
             // Grounded jump
             groundedJumpAvailable = false;
@@ -434,7 +523,7 @@ namespace Domains.Mining.Scripts
             HandleLookingDirection(dt);
         }
 
-        void HandleLookingDirection(float dt)
+        private void HandleLookingDirection(float dt)
         {
             if (!lookingDirectionParameters.changeLookingDirection)
                 return;
@@ -489,7 +578,8 @@ namespace Domains.Mining.Scripts
                 CharacterActor.SetYaw(currentDeltaRotation * CharacterActor.Forward);
         }
 
-        void SetTargetLookingDirection(LookingDirectionParameters.LookingDirectionMovementSource lookingDirectionMode)
+        private void SetTargetLookingDirection(
+            LookingDirectionParameters.LookingDirectionMovementSource lookingDirectionMode)
         {
             if (lookingDirectionMode == LookingDirectionParameters.LookingDirectionMovementSource.Input)
             {
@@ -574,7 +664,7 @@ namespace Domains.Mining.Scripts
                 StandUp(dt);
         }
 
-        void Crouch(float dt)
+        private void Crouch(float dt)
         {
             var sizeReferenceType = CharacterActor.IsGrounded
                 ? CharacterActor.SizeReferenceType.Bottom
@@ -589,7 +679,7 @@ namespace Domains.Mining.Scripts
                 isCrouched = true;
         }
 
-        void StandUp(float dt)
+        private void StandUp(float dt)
         {
             var sizeReferenceType = CharacterActor.IsGrounded
                 ? CharacterActor.SizeReferenceType.Bottom
@@ -694,7 +784,7 @@ namespace Domains.Mining.Scripts
 
         #region Jump
 
-        void ResetJump()
+        private void ResetJump()
         {
             notGroundedJumpsLeft = verticalMovementParameters.availableNotGroundedJumps;
             groundedJumpAvailable = true;
@@ -741,7 +831,8 @@ namespace Domains.Mining.Scripts
                     case JumpResult.NotGrounded:
                         notGroundedJumpsLeft--;
 
-                        break;
+                        return; // Prevents any further jump processing
+
 
                     case JumpResult.Invalid:
                         return;
