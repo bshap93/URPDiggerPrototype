@@ -14,23 +14,30 @@ namespace Gameplay.Config
 
         public static void ClearAllSaveData()
         {
-            // Reset Pickables
-            PickableManager.ResetPickedItems();
+            var isEditorMode = !Application.isPlaying;
 
+            if (isEditorMode) Debug.Log("Running data reset in Editor mode...");
 
-            // Reset Dispenser States
-            // DispenserManager.ResetDispenserStates();
+            // Reset Pickables - only if not in editor mode, or make PickableManager.ResetPickedItems() editor-safe
+            if (!isEditorMode)
+            {
+                PickableManager.ResetPickedItems();
+            }
+            else
+            {
+                // Direct file manipulation for Editor mode
+                if (ES3.FileExists(SaveManager.SaveFileName))
+                    if (ES3.KeyExists("PickedItems", SaveManager.SaveFileName))
+                    {
+                        ES3.DeleteKey("PickedItems", SaveManager.SaveFileName);
+                        Debug.Log("Reset picked items data");
+                    }
+            }
 
-
-            // // Reset  Mutable Stats
+            // Reset stats
             PlayerStaminaManager.ResetPlayerStamina();
             PlayerHealthManager.ResetPlayerHealth();
             PlayerInventoryManager.ResetInventory();
-            //
-            // PlayerAttributesProgressionManager.ResetPlayerAttributesProgression();
-
-            Debug.Log("Destuctable containers reset.");
-
 
             Debug.Log("All save data cleared successfully.");
         }

@@ -11,6 +11,7 @@ namespace Domains.Scene.Scripts
     public class SaveManager : MonoBehaviour, MMEventListener<SaveLoadEvent>
     {
         public const string SaveFileName = "GameSave.es3";
+        public const string SavePickablesFileName = "Pickables.es3";
 
         // [Header("Persistence Managers")] [SerializeField]
         // InventoryPersistenceManager inventoryManager;

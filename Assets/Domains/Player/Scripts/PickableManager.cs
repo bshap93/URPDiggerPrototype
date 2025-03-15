@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Domains.Scene.Scripts;
+using Gameplay.Events;
+using MoreMountains.Tools;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,28 +20,59 @@ namespace Domains.Player.Scripts
 #endif
 
 
-    public class PickableManager : MonoBehaviour
+    public class PickableManager : MonoBehaviour, MMEventListener<ItemEvent>
     {
         public static HashSet<string> PickedItems = new();
 
-        string _savePath;
+        private string _savePath;
 
 
-        void Start()
+        private void Start()
         {
             _savePath = GetSaveFilePath();
+
+            if (!ES3.FileExists(_savePath))
+            {
+                UnityEngine.Debug.Log("[PickableManager] No save file found, forcing initial save...");
+                ResetPickedItems(); // Ensure default values are set
+            }
+
             LoadPickedItems();
         }
 
-        static string GetSaveFilePath()
+        private void Update()
         {
-            var slotPath = ES3SlotManager.selectedSlotPath;
-            return string.IsNullOrEmpty(slotPath) ? "PickedItems.es3" : $"{slotPath}/PickedItems.es3";
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
+                SavePickedItem("test", true);
+        }
+
+
+        private void OnEnable()
+        {
+            this.MMEventStartListening();
+        }
+
+        private void OnDisable()
+        {
+            this.MMEventStopListening();
+        }
+
+        public void OnMMEvent(ItemEvent eventType)
+        {
+            if (eventType.EventType == ItemEventType.Picked)
+                UnityEngine.Debug.Log($"Item picked: {eventType.Item.BaseItem.ItemName}");
+        }
+
+
+        private static string GetSaveFilePath()
+        {
+            return SaveManager.SavePickablesFileName;
         }
 
         public void LoadPickedItems()
         {
-            var saveFilePath = GetSaveFilePath();
+            if (_savePath == null)
+                _savePath = GetSaveFilePath();
             var exists = ES3.FileExists(_savePath);
             if (exists)
             {
@@ -64,10 +98,12 @@ namespace Domains.Player.Scripts
         {
             return PickedItems.Contains(uniqueID);
         }
+
         public static void SavePickedItem(string uniqueID, bool b)
         {
             ES3.Save(uniqueID, b, GetSaveFilePath());
         }
+
         public static void SaveItemPosition(string itemPickerUniqueID, Vector3 transformPosition, string prefabName)
         {
             throw new NotImplementedException();

@@ -4,6 +4,7 @@ using System.Linq;
 using Domains.Items;
 using Domains.Items.Events;
 using Domains.UI;
+using JetBrains.Annotations;
 using MoreMountains.Tools;
 using UnityEditor;
 using UnityEngine;
@@ -30,18 +31,28 @@ namespace Domains.Scene.Scripts
 
         public static List<InventoryEntryData> InventoryContentData = new();
 
-        public InventoryBarUpdater inventoryBarUpdater;
+        // Add this to PlayerInventoryManager
+        [SerializeField] private List<InventoryEntryData> _currentInventoryItems = new();
+
+        [CanBeNull] public InventoryBarUpdater inventoryBarUpdater;
 
         private string _savePath;
 
         private void Start()
         {
             PlayerInventory = FindFirstObjectByType<Inventory>();
+
+            if (PlayerInventory == null)
+            {
+                UnityEngine.Debug.LogError("Failed to find Inventory component in scene!");
+                return; // Early return to prevent null reference exceptions
+            }
+
             _savePath = GetSaveFilePath();
 
             if (!ES3.FileExists(_savePath))
             {
-                UnityEngine.Debug.Log("[PlayerHealthManager] No save file found, forcing initial save...");
+                UnityEngine.Debug.Log("[PlayerInventoryManager] No save file found, forcing initial save...");
                 ResetInventory(); // Ensure default values are set
             }
 
@@ -50,6 +61,7 @@ namespace Domains.Scene.Scripts
             LoadInventory();
         }
 
+// Then in Update() method (or you could do this in LateUpdate to be more efficient)
         private void Update()
         {
             if (UnityEngine.Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
@@ -71,7 +83,10 @@ namespace Domains.Scene.Scripts
 
         public void OnMMEvent(InventoryEvent eventType)
         {
-            throw new NotImplementedException();
+            UnityEngine.Debug.Log($"Inventory event received: {eventType.EventType}");
+
+            // Add this to save when inventory changes
+            if (eventType.EventType == InventoryEventType.ContentChanged) SaveInventory();
         }
 
 
@@ -82,7 +97,15 @@ namespace Domains.Scene.Scripts
 
         public static void SaveInventory()
         {
+            // Skip saving if in Editor mode and not playing
+            if (!Application.isPlaying)
+            {
+                UnityEngine.Debug.Log("SaveInventory skipped in Editor mode");
+                return;
+            }
+
             var saveFilePath = GetSaveFilePath();
+
             if (PlayerInventory == null)
             {
                 UnityEngine.Debug.LogError("InventoryPersistenceManager: No Inventory Assigned!");
@@ -94,6 +117,7 @@ namespace Domains.Scene.Scripts
             foreach (var entry in PlayerInventory.Content)
                 inventoryData.Add(new InventoryEntryData(entry.UniqueID, entry.BaseItem.ItemID));
 
+            InventoryContentData = inventoryData; // Update static reference too
             ES3.Save(InventoryKey, inventoryData, saveFilePath);
             UnityEngine.Debug.Log($"✅ Inventory saved at {saveFilePath}");
         }
@@ -113,10 +137,10 @@ namespace Domains.Scene.Scripts
         {
             var saveFilePath = GetSaveFilePath();
 
-            if (ES3.FileExists(saveFilePath))
+            if (ES3.FileExists(saveFilePath) && ES3.KeyExists(InventoryKey, saveFilePath))
             {
                 InventoryContentData = ES3.Load<List<InventoryEntryData>>(InventoryKey, saveFilePath);
-                inventoryBarUpdater.Initialize();
+                if (inventoryBarUpdater != null) inventoryBarUpdater.Initialize();
                 PlayerInventory.Content.Clear();
 
                 foreach (var itemData in InventoryContentData)
@@ -133,15 +157,34 @@ namespace Domains.Scene.Scripts
             }
             else
             {
-                UnityEngine.Debug.LogError($"No saved inventory data found at {saveFilePath}");
-                ResetInventory();
+                UnityEngine.Debug.Log(
+                    $"No saved inventory data found at {saveFilePath} or key doesn't exist. Creating new inventory.");
+                InventoryContentData = new List<InventoryEntryData>();
+                PlayerInventory.Content.Clear();
+                SaveInventory(); // Create an empty inventory save
             }
         }
 
         public static void ResetInventory()
         {
-            InventoryContentData.Clear();
-            PlayerInventory.Content.Clear();
+            InventoryContentData = new List<InventoryEntryData>();
+
+            // Only try to clear the inventory if we're in Play mode with an active inventory
+            if (Application.isPlaying && PlayerInventory != null) PlayerInventory.Content.Clear();
+
+            // Special case for when called from Editor
+            if (!Application.isPlaying)
+            {
+                // Just delete the saved inventory data without trying to access runtime objects
+                var saveFilePath = GetSaveFilePath();
+                if (ES3.FileExists(saveFilePath) && ES3.KeyExists(InventoryKey, saveFilePath))
+                {
+                    ES3.DeleteKey(InventoryKey, saveFilePath);
+                    UnityEngine.Debug.Log($"Deleted inventory data from {saveFilePath}");
+                }
+
+                return; // Skip the SaveInventory call below
+            }
 
             SaveInventory();
         }
