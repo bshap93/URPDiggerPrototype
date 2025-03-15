@@ -130,7 +130,7 @@ namespace Domains.Scene.Scripts
         public void Initialize()
         {
             ResetInventory();
-            inventoryBarUpdater.Initialize();
+            if (inventoryBarUpdater != null) inventoryBarUpdater.Initialize();
         }
 
         public void LoadInventory()

@@ -38,6 +38,8 @@ namespace Gameplay.Config
             PlayerStaminaManager.ResetPlayerStamina();
             PlayerHealthManager.ResetPlayerHealth();
             PlayerInventoryManager.ResetInventory();
+            PlayerCurrencyManager.ResetPlayerCurrency();
+
 
             Debug.Log("All save data cleared successfully.");
         }

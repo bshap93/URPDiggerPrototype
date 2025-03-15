@@ -1,6 +1,7 @@
 using System;
 using Domains.Mining.Scripts;
 using Domains.Player.Scripts;
+using Gameplay.Events;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -15,21 +16,23 @@ namespace Domains.Items
 
         [Header("Feedbacks")] [Tooltip("Feedbacks to play when the item is picked up")]
         public MMFeedbacks pickedMmFeedbacks; // Feedbacks to play when the item is picked up
+
         [Tooltip("Feedbacks to play when the item is sold")]
         public MMFeedbacks soldMmFeedbacks; // Feedbacks to play when the item is sold
+
         [FormerlySerializedAs("NotPickable")] public bool notPickable; // If true, the item cannot be picked up
 #pragma warning disable CS0414 // Field is assigned but its value is never used
-        bool _isBeingDestroyed;
+        private bool _isBeingDestroyed;
 #pragma warning restore CS0414 // Field is assigned but its value is never used
 
 #pragma warning disable CS0414 // Field is assigned but its value is never used
-        bool _isInRange;
+        private bool _isInRange;
 #pragma warning restore CS0414 // Field is assigned but its value is never used
 
 
-        Inventory _targetInventory;
+        private Inventory _targetInventory;
 
-        void Awake()
+        private void Awake()
         {
             if (string.IsNullOrEmpty(uniqueID))
             {
@@ -38,7 +41,7 @@ namespace Domains.Items
             }
         }
 
-        void Start()
+        private void Start()
         {
             if (PickableManager.IsItemPicked(uniqueID))
             {
@@ -54,7 +57,7 @@ namespace Domains.Items
         }
 
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             _isBeingDestroyed = true;
 
@@ -62,15 +65,16 @@ namespace Domains.Items
             enabled = false;
         }
 
-        void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player")) _isInRange = true;
         }
 
-        void OnTriggerExit(Collider exitCollider)
+        private void OnTriggerExit(Collider exitCollider)
         {
             if (exitCollider.CompareTag("Player")) _isInRange = false;
         }
+
         public void Interact()
         {
             PickItem();
@@ -80,7 +84,7 @@ namespace Domains.Items
         {
             if (_targetInventory != null)
             {
-                // Check if inventory already contains this UniqueID
+                // Only add if not already in inventory
                 if (_targetInventory.GetItem(uniqueID) != null)
                 {
                     UnityEngine.Debug.LogWarning("Item already in inventory! Skipping pickup.");
@@ -89,9 +93,24 @@ namespace Domains.Items
 
                 var entry = new Inventory.InventoryEntry(uniqueID, itemType);
                 if (_targetInventory.AddItem(entry))
+                {
+                    // Play feedback
+                    pickedMmFeedbacks?.PlayFeedbacks();
+
+                    // Save item as picked
+                    PickableManager.SavePickedItem(uniqueID, true);
+                    PickableManager.PickedItems.Add(uniqueID);
+
+                    // Trigger event
+                    ItemEvent.Trigger(ItemEventType.Picked, entry, transform);
+
+                    // Destroy
                     Destroy(gameObject);
+                }
                 else
+                {
                     UnityEngine.Debug.LogWarning("Inventory full! Cannot pick up item.");
+                }
             }
         }
     }

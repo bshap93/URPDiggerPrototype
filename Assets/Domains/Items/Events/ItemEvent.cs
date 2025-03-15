@@ -4,18 +4,16 @@ using UnityEngine;
 
 public enum ItemEventType
 {
-    PickupRangeEntered,
     Picked,
     Sold,
-    Dropped,
-    PickupRangeExited
+    Dropped
 }
 
 namespace Gameplay.Events
 {
     public struct ItemEvent
     {
-        static ItemEvent _e;
+        private static ItemEvent _e;
 
         // Amount is embedded in the item
         public Inventory.InventoryEntry Item;

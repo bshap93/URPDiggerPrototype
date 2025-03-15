@@ -13,5 +13,6 @@ namespace Domains.Player.Scripts.ScriptableObjects
         public int InitialEnduranceExperiencePoints;
 
         [Header("Inventory Stats")] public int InitialWeightLimit;
+        [Header("Currency Stats")] public int InitialCurrency;
     }
 }

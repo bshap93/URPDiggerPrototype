@@ -17,3 +17,4 @@ MonoBehaviour:
   InitialEnduranceLevel: 1
   InitialEnduranceExperiencePoints: 0
   InitialWeightLimit: 10
+  InitialCurrency: 10

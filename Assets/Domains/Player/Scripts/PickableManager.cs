@@ -60,9 +60,11 @@ namespace Domains.Player.Scripts
         public void OnMMEvent(ItemEvent eventType)
         {
             if (eventType.EventType == ItemEventType.Picked)
+            {
+                SavePickedItem(eventType.Item.UniqueID, true);
                 UnityEngine.Debug.Log($"Item picked: {eventType.Item.BaseItem.ItemName}");
+            }
         }
-
 
         private static string GetSaveFilePath()
         {
@@ -102,6 +104,7 @@ namespace Domains.Player.Scripts
         public static void SavePickedItem(string uniqueID, bool b)
         {
             ES3.Save(uniqueID, b, GetSaveFilePath());
+            UnityEngine.Debug.Log($"Item {uniqueID} saved as picked: {b}");
         }
 
         public static void SaveItemPosition(string itemPickerUniqueID, Vector3 transformPosition, string prefabName)

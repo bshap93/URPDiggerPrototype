@@ -1,5 +1,6 @@
 using Domains.Player.Events;
 using Domains.Player.Scripts.ScriptableObjects;
+using Domains.Scene.Scripts;
 using Domains.UI;
 using MoreMountains.Tools;
 using UnityEditor;
@@ -140,7 +141,7 @@ namespace Domains.Player.Scripts
 
         private static string GetSaveFilePath()
         {
-            return "GameSave.es3"; // Single save file for everything
+            return SaveManager.SaveFileName;
         }
 
         public void LoadPlayerHealth()

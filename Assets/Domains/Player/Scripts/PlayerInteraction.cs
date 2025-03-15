@@ -114,7 +114,6 @@ namespace Domains.Player.Scripts
         private void HidePickupPrompt()
         {
             _interactablePrompt = false;
-            UnityEngine.Debug.Log(""); // Clear message
         }
 
         private void DetectTexture(RaycastHit hit)
