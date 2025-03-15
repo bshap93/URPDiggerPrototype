@@ -5,8 +5,9 @@ namespace Domains.Scene.Events
     public enum SceneEventType
     {
         SceneLoaded,
-        PauseScene,
-        ResumeScene
+        TogglePauseScene,
+        ResumeScene,
+        UnpauseScene
     }
 
     public struct SceneEvent
@@ -19,6 +20,8 @@ namespace Domains.Scene.Events
         public static void Trigger(SceneEventType sceneEventType)
         {
             _e.EventType = sceneEventType;
+
+            UnityEngine.Debug.Log("SceneEvent.Trigger: " + sceneEventType);
             MMEventManager.TriggerEvent(_e);
         }
     }

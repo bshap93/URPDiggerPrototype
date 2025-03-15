@@ -1,3 +1,4 @@
+using Domains.Scene.Events;
 using UnityEngine;
 
 public class PauseManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class PauseManager : MonoBehaviour
         {
             _isPaused = !_isPaused;
             Time.timeScale = _isPaused ? 0 : 1;
+
+            SceneEvent.Trigger(SceneEventType.TogglePauseScene);
         }
     }
 }
