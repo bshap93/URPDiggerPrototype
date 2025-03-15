@@ -1,4 +1,5 @@
 ﻿using Domains.Player.Events;
+using Domains.Player.Scripts.ScriptableObjects;
 using Domains.UI;
 using Gameplay.Character.Stamina;
 using MoreMountains.Tools;
@@ -111,35 +112,28 @@ namespace Domains.Player.Scripts
             {
                 StaminaPoints -= amount;
             }
-
-            // SavePlayerStamina();
         }
 
         public static void RecoverStamina(float amount)
         {
             if (StaminaPoints == 0 && amount > 0) PlayerStatusEvent.Trigger(PlayerStatusEventType.RegainedStamina);
             StaminaPoints += amount;
-            SavePlayerStamina();
         }
 
         public static void FullyRecoverStamina()
         {
             StaminaPoints = MaxStaminaPoints;
             PlayerStatusEvent.Trigger(PlayerStatusEventType.RegainedStamina);
-
-            SavePlayerStamina();
         }
 
         public static void IncreaseMaximumStamina(float amount)
         {
             MaxStaminaPoints += amount;
-            SavePlayerStamina();
         }
 
         public static void DecreaseMaximumStamina(float amount)
         {
             MaxStaminaPoints -= amount;
-            SavePlayerStamina();
         }
 
         private static string GetSaveFilePath()
@@ -184,14 +178,13 @@ namespace Domains.Player.Scripts
                 MaxStaminaPoints = characterStatProfile.InitialMaxStamina;
             }
 
+            PlayerStatusEvent.Trigger(PlayerStatusEventType.ResetStamina);
 
             SavePlayerStamina();
         }
 
         public static void SavePlayerStamina()
         {
-            var saveFilePath = GetSaveFilePath();
-
             ES3.Save("StaminaPoints", StaminaPoints, "GameSave.es3");
             ES3.Save("MaxStaminaPoints", MaxStaminaPoints, "GameSave.es3");
         }

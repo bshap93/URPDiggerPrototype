@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace Domains.Player.Scripts
@@ -9,7 +10,7 @@ namespace Domains.Player.Scripts
         [MenuItem("Debug/Reset/Reset Health")]
         public static void ResetHealth()
         {
-            PlayerHealthManager.ResetPlayerHealth();
+            PlayerCurrencyManager.ResetPlayerCurrency();
         }
     }
 #endif
@@ -39,6 +40,11 @@ namespace Domains.Player.Scripts
         {
             var saveFilePath = GetSaveFilePath();
             ES3.Save("CompanyCredits", CompanyCredits, saveFilePath);
+        }
+
+        public static void ResetPlayerCurrency()
+        {
+            throw new NotImplementedException();
         }
     }
 }

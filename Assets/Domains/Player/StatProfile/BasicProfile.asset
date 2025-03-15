@@ -16,3 +16,4 @@ MonoBehaviour:
   InitialMaxHealth: 20
   InitialEnduranceLevel: 1
   InitialEnduranceExperiencePoints: 0
+  InitialWeightLimit: 10

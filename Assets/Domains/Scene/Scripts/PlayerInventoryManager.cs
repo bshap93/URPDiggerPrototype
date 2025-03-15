@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Domains.Items;
 using Domains.Items.Events;
+using Domains.UI;
+using MoreMountains.Tools;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,26 +21,69 @@ namespace Domains.Scene.Scripts
     }
 #endif
 
-    public class PlayerInventoryManager : MonoBehaviour
+    [RequireComponent(typeof(Inventory))]
+    public class PlayerInventoryManager : MonoBehaviour, MMEventListener<InventoryEvent>
     {
-        private const string INVENTORY_KEY = "InventoryContent";
-        private const string RESOURCES_PATH = "Items";
-        public Inventory playerInventory;
+        private const string InventoryKey = "InventoryContentData";
+        private const string ResourcesPath = "Items";
+        public static Inventory PlayerInventory;
+
+        public static List<InventoryEntryData> InventoryContentData = new();
+
+        public InventoryBarUpdater inventoryBarUpdater;
+
+        private string _savePath;
+
+        private void Start()
+        {
+            PlayerInventory = FindFirstObjectByType<Inventory>();
+            _savePath = GetSaveFilePath();
+
+            if (!ES3.FileExists(_savePath))
+            {
+                UnityEngine.Debug.Log("[PlayerHealthManager] No save file found, forcing initial save...");
+                ResetInventory(); // Ensure default values are set
+            }
+
+            PlayerInventory.SetWeightLimit(PlayerInfoSheet.WeightLimit);
+
+            LoadInventory();
+        }
+
+        private void Update()
+        {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F5)) // Press F5 to force save
+            {
+                SaveInventory();
+                UnityEngine.Debug.Log("Player inventory saved");
+            }
+        }
+
+        private void OnEnable()
+        {
+            this.MMEventStartListening();
+        }
+
+        private void OnDisable()
+        {
+            this.MMEventStopListening();
+        }
+
+        public void OnMMEvent(InventoryEvent eventType)
+        {
+            throw new NotImplementedException();
+        }
 
 
         private static string GetSaveFilePath()
         {
-            var slotPath = ES3SlotManager.selectedSlotPath;
-            var path = string.IsNullOrEmpty(slotPath) ? "PlayerInventory.es3" : $"{slotPath}/PlayerStamina.es3";
-
-            UnityEngine.Debug.Log($"[PlayerInventoryManager] Save file path resolved to: {path}");
-            return path;
+            return SaveManager.SaveFileName;
         }
 
-        public void SaveInventory()
+        public static void SaveInventory()
         {
             var saveFilePath = GetSaveFilePath();
-            if (playerInventory == null)
+            if (PlayerInventory == null)
             {
                 UnityEngine.Debug.LogError("InventoryPersistenceManager: No Inventory Assigned!");
                 return;
@@ -46,10 +91,10 @@ namespace Domains.Scene.Scripts
 
             var inventoryData = new List<InventoryEntryData>();
 
-            foreach (var entry in playerInventory.Content)
+            foreach (var entry in PlayerInventory.Content)
                 inventoryData.Add(new InventoryEntryData(entry.UniqueID, entry.BaseItem.ItemID));
 
-            ES3.Save(INVENTORY_KEY, inventoryData, saveFilePath);
+            ES3.Save(InventoryKey, inventoryData, saveFilePath);
             UnityEngine.Debug.Log($"✅ Inventory saved at {saveFilePath}");
         }
 
@@ -58,38 +103,47 @@ namespace Domains.Scene.Scripts
             return ES3.FileExists(GetSaveFilePath());
         }
 
+        public void Initialize()
+        {
+            ResetInventory();
+            inventoryBarUpdater.Initialize();
+        }
+
         public void LoadInventory()
         {
             var saveFilePath = GetSaveFilePath();
 
-            if (!ES3.FileExists(saveFilePath))
+            if (ES3.FileExists(saveFilePath))
             {
-                UnityEngine.Debug.LogWarning($"❌ No saved inventory data found at {saveFilePath}");
-                return;
-            }
+                InventoryContentData = ES3.Load<List<InventoryEntryData>>(InventoryKey, saveFilePath);
+                inventoryBarUpdater.Initialize();
+                PlayerInventory.Content.Clear();
 
-            var loadedItems = ES3.Load<List<InventoryEntryData>>(INVENTORY_KEY, saveFilePath);
-            playerInventory.Content.Clear();
-
-            foreach (var itemData in loadedItems)
-            {
-                var item = GetItemByID(itemData.ItemID);
-                if (item != null)
+                foreach (var itemData in InventoryContentData)
                 {
-                    var entry = new Inventory.InventoryEntry(itemData.UniqueID, item);
-                    playerInventory.Content.Add(entry);
+                    var item = GetItemByID(itemData.ItemID);
+                    if (item != null)
+                    {
+                        var entry = new Inventory.InventoryEntry(itemData.UniqueID, item);
+                        PlayerInventory.Content.Add(entry);
+                    }
                 }
-            }
 
-            InventoryEvent.Trigger(InventoryEventType.InventoryLoaded, playerInventory);
-            UnityEngine.Debug.Log($"✅ Loaded inventory data from {saveFilePath}");
+                UnityEngine.Debug.Log($"✅ Loaded inventory data from {saveFilePath}");
+            }
+            else
+            {
+                UnityEngine.Debug.LogError($"No saved inventory data found at {saveFilePath}");
+                ResetInventory();
+            }
         }
 
         public static void ResetInventory()
         {
-            UnityEngine.Debug.Log("[PlayerInventoryManager] Resetting Inventory");
+            InventoryContentData.Clear();
+            PlayerInventory.Content.Clear();
 
-            ES3.Save(INVENTORY_KEY, new List<BaseItem>(), GetSaveFilePath());
+            SaveInventory();
         }
 
         private static void RestoreInventory(Inventory inventory, List<InventoryEntryData> inventoryContentData)
@@ -107,7 +161,7 @@ namespace Domains.Scene.Scripts
 
         private static BaseItem GetItemByID(string itemID)
         {
-            return Resources.LoadAll<BaseItem>(RESOURCES_PATH).FirstOrDefault(i => i.ItemID == itemID);
+            return Resources.LoadAll<BaseItem>(ResourcesPath).FirstOrDefault(i => i.ItemID == itemID);
         }
 
         [Serializable]

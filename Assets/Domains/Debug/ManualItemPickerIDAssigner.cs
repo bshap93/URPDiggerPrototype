@@ -3,12 +3,14 @@ using Domains.Items;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
+
 namespace Domains.Debug
 {
     public class ManualItemPickerIDAssigner : Editor
     {
         [MenuItem("Debug/Assign Unique IDs to ItemPickers")]
-        static void AssignUniqueIDs()
+        private static void AssignUniqueIDs()
         {
             // Find all ManualItemPicker components in the current scene
             var allItemPickers = FindObjectsByType<ItemPicker>(FindObjectsSortMode.None);
@@ -36,3 +38,4 @@ namespace Domains.Debug
         }
     }
 }
+#endif

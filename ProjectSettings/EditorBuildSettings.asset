@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/OldMainScenes/MainSceneOfPrototype.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/MicroSplatSceneOfPrototype.unity
+    guid: 057bdb286227858498aec756eae12d98
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: e51adf22f4549324fbb944250454d5b9, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

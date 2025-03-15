@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Domains.Player.Scripts
+namespace Domains.Player.Scripts.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "CharacterStatProfile", menuName = "Character/Character Stat Profile")]
     public class CharacterStatProfile : ScriptableObject
@@ -11,5 +11,7 @@ namespace Domains.Player.Scripts
 
         [Header("Initial Endurance")] public int InitialEnduranceLevel;
         public int InitialEnduranceExperiencePoints;
+
+        [Header("Inventory Stats")] public int InitialWeightLimit;
     }
 }

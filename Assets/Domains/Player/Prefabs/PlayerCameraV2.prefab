@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 2433521571604439869}
   - component: {fileID: 6180353608885332650}
   m_Layer: 0
-  m_Name: SM_Prop_Drill_03_Extension_03
+  m_Name: FirstPersonDrill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -918,7 +918,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7862733689260156417}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 103.63, y: 2.21, z: 108.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1133,7 +1133,7 @@ MonoBehaviour:
   jetPackDuration: 0.1
   jetPackSpeedMultiplier: 1.2
   enableFallDamage: 1
-  minimumFallDamageSpeed: 10
+  minimumFallDamageSpeed: 15
   fallDamageMultiplier: 1
 --- !u!114 &2966437673752299551
 MonoBehaviour:
@@ -1152,7 +1152,7 @@ MonoBehaviour:
   miningRange: 5
   toolAnimator: {fileID: 6813847935302883332}
   cameraTransform: {fileID: 6742377666390242986}
-  staminaExpense: 0
+  staminaExpense: 0.1
   miningFeedbacks: {fileID: 0}
   cannotMineFeedbacks: {fileID: 0}
   size: 1

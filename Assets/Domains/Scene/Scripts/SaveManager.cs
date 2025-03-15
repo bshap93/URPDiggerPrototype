@@ -10,8 +10,7 @@ namespace Domains.Scene.Scripts
     [Serializable]
     public class SaveManager : MonoBehaviour, MMEventListener<SaveLoadEvent>
     {
-        private const string SaveFilePrefix = "GameSave";
-        private const string SaveFileExtension = ".es3";
+        public const string SaveFileName = "GameSave.es3";
 
         // [Header("Persistence Managers")] [SerializeField]
         // InventoryPersistenceManager inventoryManager;
@@ -98,7 +97,7 @@ namespace Domains.Scene.Scripts
         {
             PlayerStaminaManager.SavePlayerStamina();
             PlayerHealthManager.SavePlayerHealth();
-            playerInventoryManager?.SaveInventory();
+            PlayerInventoryManager.SaveInventory();
             PlayerCurrencyManager.SavePlayerCurrency();
             UnityEngine.Debug.Log($"Save Path: {Application.persistentDataPath}");
         }
@@ -108,17 +107,19 @@ namespace Domains.Scene.Scripts
             // var inventoryLoaded = inventoryManager != null && inventoryManager.HasSavedData();
             var staminaLoaded = playerStaminaManager != null && playerStaminaManager.HasSavedData();
             var healthLoaded = playerHealthManager != null && playerHealthManager.HasSavedData();
+            var inventoryLoaded = playerInventoryManager != null && playerInventoryManager.HasSavedData();
+
 
             // if (inventoryLoaded) inventoryManager.LoadInventory();
             if (staminaLoaded) playerStaminaManager.LoadPlayerStamina();
             if (healthLoaded) playerHealthManager.LoadPlayerHealth();
+            if (inventoryLoaded) playerInventoryManager.LoadInventory();
 
             // Load pickable items and destroyed containers
             pickableManager?.LoadPickedItems();
 
 
-            return staminaLoaded || healthLoaded;
-            // || inventoryLoaded;
+            return staminaLoaded || healthLoaded || inventoryLoaded;
         }
     }
 }

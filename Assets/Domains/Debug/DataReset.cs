@@ -1,4 +1,5 @@
 using Domains.Player.Scripts;
+using Domains.Scene.Scripts;
 using UnityEngine;
 
 namespace Gameplay.Config
@@ -20,12 +21,11 @@ namespace Gameplay.Config
             // Reset Dispenser States
             // DispenserManager.ResetDispenserStates();
 
-            // // Reset Inventory System
-            // InventoryPersistenceManager.Instance?.ResetInventory();
 
             // // Reset  Mutable Stats
             PlayerStaminaManager.ResetPlayerStamina();
             PlayerHealthManager.ResetPlayerHealth();
+            PlayerInventoryManager.ResetInventory();
             //
             // PlayerAttributesProgressionManager.ResetPlayerAttributesProgression();
 

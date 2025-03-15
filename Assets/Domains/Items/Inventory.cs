@@ -11,9 +11,9 @@ namespace Domains.Items
     {
         public List<InventoryEntry> Content;
 
-        public float WeightLimit;
-
         public MMFeedbacks InventoryFullFeedbacks;
+
+        private float _weightLimit;
 
 
         public float CurrentWeight()
@@ -26,12 +26,12 @@ namespace Domains.Items
 
         public float RemainingWeight()
         {
-            return Mathf.Max(0, WeightLimit - CurrentWeight()); // Prevent negative weight values
+            return Mathf.Max(0, _weightLimit - CurrentWeight()); // Prevent negative weight values
         }
 
         public virtual bool AddItem(InventoryEntry item)
         {
-            if (CurrentWeight() + item.BaseItem.ItemWeight > WeightLimit)
+            if (CurrentWeight() + item.BaseItem.ItemWeight > _weightLimit)
             {
                 UnityEngine.Debug.LogWarning("Inventory is full");
                 InventoryFullFeedbacks?.PlayFeedbacks();
@@ -91,18 +91,24 @@ namespace Domains.Items
 
         public virtual bool IsFull()
         {
-            return CurrentWeight() >= WeightLimit;
+            return CurrentWeight() >= _weightLimit;
         }
 
         public virtual void SaveInventory()
         {
             throw new NotImplementedException();
         }
+
         public void EmptyInventory()
         {
             Content = new List<InventoryEntry>();
 
             InventoryEvent.Trigger(InventoryEventType.ContentChanged, this);
+        }
+
+        public void SetWeightLimit(int weightLimit)
+        {
+            _weightLimit = weightLimit;
         }
 
         [Serializable]

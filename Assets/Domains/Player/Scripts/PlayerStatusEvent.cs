@@ -7,10 +7,12 @@ namespace Domains.Player.Scripts
     public enum PlayerStatusEventType
     {
         OutOfStamina,
-        RegainedStamina,
         OutOfHealth,
         RegainedHealth,
-        ImmuneToDamage
+        ImmuneToDamage,
+        ResetHealth,
+        ResetStamina,
+        RegainedStamina
     }
 
     public struct PlayerStatusEvent
