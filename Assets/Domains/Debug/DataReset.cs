@@ -2,13 +2,13 @@ using Domains.Player.Scripts;
 using Domains.Scene.Scripts;
 using UnityEngine;
 
-namespace Gameplay.Config
+namespace Domains.Debug
 {
     public class DataReset : MonoBehaviour
     {
         private void Awake()
         {
-            Debug.Log("PurePrototypeReset: Awake() called.");
+            UnityEngine.Debug.Log("PurePrototypeReset: Awake() called.");
             ClearAllSaveData();
         }
 
@@ -16,7 +16,7 @@ namespace Gameplay.Config
         {
             var isEditorMode = !Application.isPlaying;
 
-            if (isEditorMode) Debug.Log("Running data reset in Editor mode...");
+            if (isEditorMode) UnityEngine.Debug.Log("Running data reset in Editor mode...");
 
             // Reset Pickables - only if not in editor mode, or make PickableManager.ResetPickedItems() editor-safe
             if (!isEditorMode)
@@ -30,7 +30,7 @@ namespace Gameplay.Config
                     if (ES3.KeyExists("PickedItems", SaveManager.SaveFileName))
                     {
                         ES3.DeleteKey("PickedItems", SaveManager.SaveFileName);
-                        Debug.Log("Reset picked items data");
+                        UnityEngine.Debug.Log("Reset picked items data");
                     }
             }
 
@@ -39,9 +39,10 @@ namespace Gameplay.Config
             PlayerHealthManager.ResetPlayerHealth();
             PlayerInventoryManager.ResetInventory();
             PlayerCurrencyManager.ResetPlayerCurrency();
+            PickableManager.ResetPickedItems();
 
 
-            Debug.Log("All save data cleared successfully.");
+            UnityEngine.Debug.Log("All save data cleared successfully.");
         }
     }
 }

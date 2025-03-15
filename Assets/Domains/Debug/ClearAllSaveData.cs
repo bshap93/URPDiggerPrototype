@@ -1,5 +1,4 @@
-﻿using Gameplay.Config;
-using UnityEditor;
+﻿using UnityEditor;
 
 #if UNITY_EDITOR
 namespace Domains.Debug

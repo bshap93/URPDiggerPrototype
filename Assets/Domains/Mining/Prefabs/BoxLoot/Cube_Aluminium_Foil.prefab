@@ -123,12 +123,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 380f9b65545dc3b488923b80b2b83bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UniqueID: 
-  ItemType: {fileID: 11400000, guid: 0a2dd580cb4a54e4ca1670f0ad0873e6, type: 2}
-  Quantity: 1
+  uniqueID: 
+  itemType: {fileID: 11400000, guid: 0a2dd580cb4a54e4ca1670f0ad0873e6, type: 2}
+  quantity: 1
   pickedMmFeedbacks: {fileID: 0}
   soldMmFeedbacks: {fileID: 0}
-  NotPickable: 0
+  notPickable: 0
 --- !u!65 &6233095589709641670
 BoxCollider:
   m_ObjectHideFlags: 0
