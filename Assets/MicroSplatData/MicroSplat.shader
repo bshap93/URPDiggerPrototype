@@ -135,7 +135,6 @@ Shader "Terrain"
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _MSRENDERLOOP_UNITYURP6 1
       #define _MSRENDERLOOP_UNITYLD 1
       #define _MSRENDERLOOP_UNITYURP2020 1
       #define _MSRENDERLOOP_UNITYURP2021 1
@@ -4864,7 +4863,6 @@ float3 GetTessFactors ()
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _MSRENDERLOOP_UNITYURP6 1
       #define _MSRENDERLOOP_UNITYLD 1
       #define _MSRENDERLOOP_UNITYURP2020 1
       #define _MSRENDERLOOP_UNITYURP2021 1
@@ -9532,7 +9530,6 @@ float3 GetTessFactors ()
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _MSRENDERLOOP_UNITYURP6 1
       #define _MSRENDERLOOP_UNITYLD 1
       #define _MSRENDERLOOP_UNITYURP2020 1
       #define _MSRENDERLOOP_UNITYURP2021 1
@@ -14100,7 +14097,6 @@ float3 GetTessFactors ()
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _MSRENDERLOOP_UNITYURP6 1
       #define _MSRENDERLOOP_UNITYLD 1
       #define _MSRENDERLOOP_UNITYURP2020 1
       #define _MSRENDERLOOP_UNITYURP2021 1
@@ -18665,7 +18661,6 @@ float3 GetTessFactors ()
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _MSRENDERLOOP_UNITYURP6 1
       #define _MSRENDERLOOP_UNITYLD 1
       #define _MSRENDERLOOP_UNITYURP2020 1
       #define _MSRENDERLOOP_UNITYURP2021 1
@@ -23230,7 +23225,6 @@ float3 GetTessFactors ()
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _MSRENDERLOOP_UNITYURP6 1
       #define _MSRENDERLOOP_UNITYLD 1
       #define _MSRENDERLOOP_UNITYURP2020 1
       #define _MSRENDERLOOP_UNITYURP2021 1
@@ -27811,7 +27805,7 @@ float3 GetTessFactors ()
 
         UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
    }
-   Dependency "BaseMapShader" =  "Hidden/Terrain_Base757882118"
-   Fallback "Hidden/Terrain_Base757882118"
+   Dependency "BaseMapShader" =  "Hidden/Terrain_Base-1196833143"
+   Fallback "Hidden/Terrain_Base-1196833143"
    CustomEditor "MicroSplatShaderGUI"
 }
