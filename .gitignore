@@ -47,6 +47,7 @@ crashlytics-build.properties
 /[Aa]ssets/TutorialInfo/*
 /[Aa]ssets/ThirdParty/Modern UI Pack/*
 /[Aa]ssets/ThirdParty/PolygonSciFiWorlds/*
+/[Aa]ssets/ThirdParty/LowlyPoly/*
 
 /[Pp]ackages/MicroSplat-Core/*
 /[Pp]ackages/MicroSplat-CoreURP6/*

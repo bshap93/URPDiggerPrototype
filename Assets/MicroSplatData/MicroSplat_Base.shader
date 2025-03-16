@@ -11,7 +11,7 @@
 ////////////////////////////////////////
 
 
-Shader "Hidden/Terrain_Base1407111274"
+Shader "Hidden/Terrain_Base757882118"
 {
    Properties
    {
@@ -39,10 +39,11 @@ Shader "Hidden/Terrain_Base1407111274"
       _TerrainHeightmapTexture("", 2D) = "black" {}
       _TerrainNormalmapTexture("", 2D) = "bump" {}
       _HybridHeightBlendDistance("Hybrid Blend Distance", Float) = 300
+      [NoScaleOffset]_NoiseUV ("Noise UV texture", 2D) = "grey" {}
+      _NoiseUVParams("Noise UV Params", Vector) = (1, 1, 0, 0)
 
 
       _TriplanarContrast("Triplanar Contrast", Range(1.0, 8)) = 4
-     _TriplanarFaceBlend("Triplanar Face Blend", Range(0,1)) = 0
       _TriplanarUVScale("Triplanar UV Scale", Vector) = (1, 1, 0, 0)
 
 
@@ -125,13 +126,15 @@ Shader "Hidden/Terrain_Base1407111274"
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
+      #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
+      #define _CONTROLNOISEUV 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _TRIPLANARUSEFACENORMALS 1
       #define _MSRENDERLOOP_UNITYURP6 1
       #define _MICROSPLATBASEMAP 1
       #define _MSRENDERLOOP_UNITYLD 1
@@ -578,7 +581,6 @@ Shader "Hidden/Terrain_Base1407111274"
       #endif
       float _TriplanarContrast;
       float4 _TriplanarUVScale;
-      half _TriplanarFaceBlend;
 
 
          CBUFFER_END
@@ -4854,13 +4856,15 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
+      #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
+      #define _CONTROLNOISEUV 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _TRIPLANARUSEFACENORMALS 1
       #define _MSRENDERLOOP_UNITYURP6 1
       #define _MICROSPLATBASEMAP 1
       #define _MSRENDERLOOP_UNITYLD 1
@@ -5306,7 +5310,6 @@ float3 GetTessFactors ()
       #endif
       float _TriplanarContrast;
       float4 _TriplanarUVScale;
-      half _TriplanarFaceBlend;
 
 
             CBUFFER_END
@@ -9522,13 +9525,15 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
+      #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
+      #define _CONTROLNOISEUV 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _TRIPLANARUSEFACENORMALS 1
       #define _MSRENDERLOOP_UNITYURP6 1
       #define _MICROSPLATBASEMAP 1
       #define _MSRENDERLOOP_UNITYLD 1
@@ -9958,7 +9963,6 @@ float3 GetTessFactors ()
       #endif
       float _TriplanarContrast;
       float4 _TriplanarUVScale;
-      half _TriplanarFaceBlend;
 
 
             CBUFFER_END
@@ -14090,13 +14094,15 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
+      #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
+      #define _CONTROLNOISEUV 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _TRIPLANARUSEFACENORMALS 1
       #define _MSRENDERLOOP_UNITYURP6 1
       #define _MICROSPLATBASEMAP 1
       #define _MSRENDERLOOP_UNITYLD 1
@@ -14529,7 +14535,6 @@ float3 GetTessFactors ()
       #endif
       float _TriplanarContrast;
       float4 _TriplanarUVScale;
-      half _TriplanarFaceBlend;
 
 
             CBUFFER_END
@@ -18655,13 +18660,15 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
+      #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
+      #define _CONTROLNOISEUV 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _TRIPLANARUSEFACENORMALS 1
       #define _MSRENDERLOOP_UNITYURP6 1
       #define _MICROSPLATBASEMAP 1
       #define _MSRENDERLOOP_UNITYLD 1
@@ -19094,7 +19101,6 @@ float3 GetTessFactors ()
       #endif
       float _TriplanarContrast;
       float4 _TriplanarUVScale;
-      half _TriplanarFaceBlend;
 
 
             CBUFFER_END
@@ -23220,13 +23226,15 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
+      #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
+      #define _CONTROLNOISEUV 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _OUTPUTDIGGER 1
       #define _TRIPLANAR 1
-      #define _TRIPLANARUSEFACENORMALS 1
       #define _MSRENDERLOOP_UNITYURP6 1
       #define _MICROSPLATBASEMAP 1
       #define _MSRENDERLOOP_UNITYLD 1
@@ -23668,7 +23676,6 @@ float3 GetTessFactors ()
       #endif
       float _TriplanarContrast;
       float4 _TriplanarUVScale;
-      half _TriplanarFaceBlend;
 
 
          CBUFFER_END

@@ -47,6 +47,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NoiseUV:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _NormalSAO:
         m_Texture: {fileID: 18700000, guid: b1b0805041a0eb1418ee78229eb75dec, type: 2}
         m_Scale: {x: 1, y: 1}
@@ -88,7 +92,9 @@ Material:
     - _Contrast: 0.4
     - _HybridHeightBlendDistance: 300
     - _TriplanarContrast: 4
+    - _TriplanarFaceBlend: 0
     m_Colors:
+    - _NoiseUVParams: {r: 1, g: 1, b: 0, a: 0}
     - _TriplanarUVScale: {r: 1, g: 1, b: 0, a: 0}
     - _UVScale: {r: 45, g: 45, b: 0, a: 0}
   m_BuildTextureStacks: []

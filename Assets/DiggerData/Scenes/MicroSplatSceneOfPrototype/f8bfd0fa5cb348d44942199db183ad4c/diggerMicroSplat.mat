@@ -28,11 +28,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Control1:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 790431991918605807, guid: 28b27f1aa0549624ca7b4e64663e8546, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Control2:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: -6540032491079742480, guid: 28b27f1aa0549624ca7b4e64663e8546, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Control3:
@@ -44,6 +44,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseUV:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -90,6 +94,7 @@ Material:
     - _TriplanarContrast: 4
     - _TriplanarFaceBlend: 0
     m_Colors:
+    - _NoiseUVParams: {r: 1, g: 1, b: 0, a: 0}
     - _TriplanarUVScale: {r: 1, g: 1, b: 0, a: 0}
     - _UVScale: {r: 45, g: 45, b: 0, a: 0}
   m_BuildTextureStacks: []
