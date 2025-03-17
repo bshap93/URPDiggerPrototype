@@ -1,5 +1,6 @@
 using Domains.Items;
 using Domains.Items.Events;
+using Domains.UI_Global.Events;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -22,5 +23,10 @@ public class TrainConsole : MonoBehaviour
     {
         sellAllFeedbacks?.PlayFeedbacks();
         InventoryEvent.Trigger(InventoryEventType.SellAllItems, _inventory);
+    }
+
+    public void TriggerOpenVendorUI()
+    {
+        UIEvent.Trigger(UIEventType.OpenVendorConsole);
     }
 }
