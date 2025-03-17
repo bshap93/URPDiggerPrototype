@@ -16,15 +16,14 @@ namespace Domains.Items
 
         public float ItemWeight;
 
+        public int ItemValue;
+
         public virtual bool Pick()
         {
             return true;
         }
 
-        public virtual bool Sell()
-        {
-            return true;
-        }
+
         public static bool IsNull(BaseItem baseItem)
         {
             if (baseItem == null) return true;

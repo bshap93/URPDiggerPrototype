@@ -102,7 +102,8 @@ namespace Domains.Player.Scripts
 
         private void HideAllPrompts()
         {
-            foreach (var button in FindObjectsOfType<ButtonActivated>()) button.HidePrompt();
+            foreach (var button in FindObjectsByType<ButtonActivated>(FindObjectsSortMode.None))
+                button.HidePrompt();
         }
 
 

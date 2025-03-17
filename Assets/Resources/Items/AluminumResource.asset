@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: AluminumResource
   m_EditorClassIdentifier: 
   ItemID: AluminumResource
-  Quantity: 1
   ItemName: Aluminum
   ItemDescription: A bundle of aluminum foil and raw metal.
   ItemIcon: {fileID: 0}
   ItemWeight: 1
+  ItemValue: 5

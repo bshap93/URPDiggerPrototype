@@ -55,6 +55,7 @@ crashlytics-build.properties
 /[Pp]ackages/com.jbooth.microsplat.core/*
 /[Pp]ackages/com.jbooth.microsplat.digger/*
 /[Pp]ackages/com.jbooth.microsplat.triplanar/*
+/[Pp]ackages/com.occasoftware.altos/*
 
 
 # Visual Studio / MonoDevelop generated

@@ -87,6 +87,12 @@ namespace Domains.Scene.Scripts
 
             // Add this to save when inventory changes
             if (eventType.EventType == InventoryEventType.ContentChanged) SaveInventory();
+
+            if (eventType.EventType == InventoryEventType.SellAllItems)
+            {
+                PlayerInventory.SellAllItems();
+                SaveInventory();
+            }
         }
 
 

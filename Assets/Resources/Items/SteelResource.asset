@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: SteelResource
   m_EditorClassIdentifier: 
   ItemID: SteelResource
-  Quantity: 1
   ItemName: Steel
   ItemDescription: A bundle of raw space grade steel.
   ItemIcon: {fileID: 0}
   ItemWeight: 2
+  ItemValue: 15

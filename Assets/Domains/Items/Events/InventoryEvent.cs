@@ -5,7 +5,8 @@ namespace Domains.Items.Events
     public enum InventoryEventType
     {
         ContentChanged,
-        InventoryLoaded
+        InventoryLoaded,
+        SellAllItems
     }
 
     public struct InventoryEvent

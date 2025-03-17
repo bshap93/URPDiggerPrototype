@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: MicrochipResource
   m_EditorClassIdentifier: 
   ItemID: MicroChipResource
-  Quantity: 1
   ItemName: Micro Chips
   ItemDescription: A bundle of semiconductor raw material.
   ItemIcon: {fileID: 0}
   ItemWeight: 1
+  ItemValue: 50

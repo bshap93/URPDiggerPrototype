@@ -30,6 +30,15 @@
         "com.jbooth.microsplat.core": "3.9.0"
       }
     },
+    "com.occasoftware.altos": {
+      "version": "file:com.occasoftware.altos",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.render-pipelines.universal": "14.0.7",
+        "com.unity.visualeffectgraph": "14.0.7"
+      }
+    },
     "com.singularitygroup.hotreload": {
       "version": "file:com.singularitygroup.hotreload",
       "depth": 0,

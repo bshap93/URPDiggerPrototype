@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Domains.Items.Events;
+using Domains.Player.Events;
 using Domains.UI.Events;
 using MoreMountains.Feedbacks;
 using UnityEngine;
@@ -109,6 +110,20 @@ namespace Domains.Items
         public void SetWeightLimit(int weightLimit)
         {
             _weightLimit = weightLimit;
+        }
+
+        public void SellAllItems()
+        {
+            var totalValue = 0;
+            foreach (var item in Content)
+            {
+                var value = item.BaseItem.ItemValue;
+
+                totalValue += value;
+            }
+
+            CurrencyEvent.Trigger(CurrencyEventType.AddCurrency, totalValue);
+            EmptyInventory();
         }
 
         [Serializable]
